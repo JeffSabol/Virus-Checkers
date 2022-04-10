@@ -1,5 +1,4 @@
 body {
-	background: url("https://media4.giphy.com/media/3oEjHCF6kGlXK0ofsY/200.gif") no-repeat center center fixed;
 	background-size: cover;
 	font-size: 16px;
 	font-family: 'Lato', sans-serif;
@@ -21,6 +20,50 @@ h1#title {
 	position: relative;
 	top: 0px;
 }
+@keyframes spinner {
+	0% {
+	  transform: rotate(0deg);
+	}
+	100% {
+	  transform: rotate(360deg);
+	}
+  }
+  .loading-spinner {
+	  
+	width: 50px;
+	height: 50px;
+	border: 10px solid #f3f3f3; /* Light grey */
+	border-top: 10px solid #383636; /* Blue */
+	border-radius: 50%;
+	animation: spinner 1.5s linear infinite;
+  }
+  
+  .spinner-container {
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	height: 350px;
+  }
+
+table {
+	border: 2px solid rgb(245, 248, 245);
+	width: 800px;
+	height: 200px;
+	align-items: center;
+	box-shadow: 1px 1px 1px rgb(151, 131, 131);
+  }
+  
+  th {
+	border-bottom: 1px solid rgb(240, 140, 140);
+	justify-content: center;
+	border-bottom: 1px solid #ddd;
+  }
+	
+  td {
+	text-align: center;
+	justify-content: center;
+	border-bottom: 1px solid #ddd;
+  }
 
 h1#title span span {
 	font-weight: 400;
