@@ -3,7 +3,9 @@ const express = require('express');
 const bodyparser =  require('body-parser');
 var cors = require('cors')
 const request = require('request');
-
+const nvt = require('node-virustotal');
+const defaultTimedInstance = nvt.makeAPI();
+const flatten = require('flat').flatten;
 
 
 
@@ -11,6 +13,11 @@ const request = require('request');
 
 let app= express();
 app.use(cors());
+
+
+
+
+
 app.use(bodyparser.json());
 
 var mySQLconnection = mysql.createConnection({
@@ -42,22 +49,19 @@ else{
 app.listen(5000, ()=>console.log("Express server is running at port no :5000"));
 
 
-const searchSQL = async (checkHash, paramsId) => {
+const entryExists = async (checkHash, paramsId) => {
 
     var sql = "SELECT * FROM HashId WHERE EXISTS (SELECT Hash FROM HashId WHERE Hash = '"+checkHash+"')";
 
     mySQLconnection.query(sql, paramsId, (err,rows,fields)=>{
         if(!rows[0]){
-            console.log("not found");
-
+            return false;
         }
         else{
-            console.log(rows)
-            console.log("searchSQL");
             return true;
           }
         })
-   return false;
+
     }
 
 
@@ -105,24 +109,51 @@ app.get('/hashes/:id', (req, res)=>{
      app.post('/hashes', (req, res)=> {
 
 
-        found = searchSQL(req.body.Hash, [req.params.id]);
-        var sql = "INSERT INTO `HashId` (`Hash`) VALUES ('" + req.body.Hash +  "')";
-        mySQLconnection.query(sql,  [req.params.id],(err,rows,fields)=>{
-            if(!err){
-            
-                res.send(rows);
-            }
-            else{
-            
-                console.log(err);
-            }
-            })
-        
-        
-        
-        
+        checkEntry = entryExists(req.body.Hash, [req.params.id]);
+        if(checkEntry)
+        {
+
+            console.log("Hash doesn't exist in our database... checking external databases");
+
+            //API virus total
+            //7a1937dfdad30b004dae4dd55fd49d28efa658d464dab3df61b5c91b15934eea         
+            //change default key in v3
+            const theSameObject = defaultTimedInstance.fileLookup(req.body.Hash, function(err, resp){
+                if (err) {
+                  console.log('Well, crap.');
+                 res.send(err);
+                  return;
+                }
+                
+               res.send(flatten(JSON.parse(resp)));
+                return resp;
+              });
+              //res.send({name:"test read this!!!! 01984e93jinc jmd jwc "});
+
+            var sql = "INSERT INTO `HashId` (`Hash`) VALUES ('" + req.body.Hash +  "')";
+            mySQLconnection.query(sql,  [req.params.id],(err,rows,fields)=>{
+                if(!err){
+                
+                    console.log(rows);
+                }
+                else{
+                
+                    console.log(err);
+                }
+         }
+                )
+
+        }
+        else
+        {
+
+
+           console.log("IS A VIRUS!!!");
+
+
+
+        }
+
         
         
         });
-
-      
