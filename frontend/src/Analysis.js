@@ -96,7 +96,7 @@ else
       {setTimeout(() => {
         console.log("delayed doing this");
         setIsLoading();
-      }, 20000)
+      }, 16000)
     }
       return(
 
@@ -121,9 +121,9 @@ else
  
   
         <h1>{curd["data.attributes.last_analysis_stats.malicious"]} engines find this to be malicious </h1>
-        <tr>Name:{curd["data.attributes.meaningful_name"]}</tr>  
-         <tr> File type:{curd["data.attributes.type_description"]}</tr> 
-          <tr>Threat classification:{curd["data.attributes.popular_threat_classification.suggested_threat_label"]}</tr>  
+        <tr>Name: {curd["data.attributes.meaningful_name"]}</tr>  
+         <tr> File type: {curd["data.attributes.type_description"]}</tr> 
+          <tr>Threat classification: {curd["data.attributes.popular_threat_classification.suggested_threat_label"]}</tr>  
 
             </section>
         
