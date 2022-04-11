@@ -6,6 +6,8 @@ const request = require('request');
 const nvt = require('node-virustotal');
 const defaultTimedInstance = nvt.makeAPI();
 const flatten = require('flat').flatten;
+let hashExists = false ;
+
 
 
 
@@ -49,23 +51,21 @@ else{
 app.listen(5000, ()=>console.log("Express server is running at port no :5000"));
 
 
-const entryExists = async (checkHash, paramsId) => {
-
+function entryExists(checkHash, paramsId) {
     var sql = "SELECT * FROM HashId WHERE EXISTS (SELECT Hash FROM HashId WHERE Hash = '"+checkHash+"')";
 
     mySQLconnection.query(sql, paramsId, (err,rows,fields)=>{
-        if(!rows[0]){
-            return false;
-        }
-        else{
-            return true;
-          }
-        })
+        console.log("Printing rows:");
+        console.log(rows);
 
-    }
-
-
-
+        if(!rows[0]) { hashExists = false; return; }
+        else{hashExists = true; return;}
+        
+     }
+    );
+    console.log(hashExists);
+    
+}
 
 
 app.get('/hashes',   (req, res)=>{
@@ -97,63 +97,81 @@ app.get('/hashes/:id', (req, res)=>{
             console.log(err);
         }
         })
-    
-    
-    
-    
-    
-    
+
     });
 
 
-     app.post('/hashes', (req, res)=> {
+app.post('/hashes', (req, res)=> {
 
 
-        checkEntry = entryExists(req.body.Hash, [req.params.id]);
-        if(checkEntry)
-        {
+        entryExists(req.body.Hash, [req.params.id]);
 
-            console.log("Hash doesn't exist in our database... checking external databases");
+        setTimeout(() => {
+            console.log("running SQL search", hashExists );
+            if(hashExists === false)
+            {
+    
+                console.log("Hash doesn't exist in our database... checking external databases");
+    
+                //API virus total
+                //7a1937dfdad30b004dae4dd55fd49d28efa658d464dab3df61b5c91b15934eea         
+                //change default key in v3
+                const theSameObject = defaultTimedInstance.fileLookup(req.body.Hash, function(err, resp){
+                    if (err) {
+                      console.log('Well, crap.');
+                     res.send(err);
+                      return;
+                    }
+                    
+                    var sql = "INSERT INTO `HashId` (`Hash`) VALUES ('" + req.body.Hash +  "')";
+                mySQLconnection.query(sql,  [req.params.id],(err,rows,fields)=>{
+                    if(!err){
+                    
+                        console.log(rows);
+                    }
+                    else{
+                    
+                        console.log(err);
+                    }
+             }
+                    )
 
-            //API virus total
-            //7a1937dfdad30b004dae4dd55fd49d28efa658d464dab3df61b5c91b15934eea         
-            //change default key in v3
-            const theSameObject = defaultTimedInstance.fileLookup(req.body.Hash, function(err, resp){
-                if (err) {
-                  console.log('Well, crap.');
-                 res.send(err);
-                  return;
-                }
-                
-               res.send(flatten(JSON.parse(resp)));
-                return resp;
-              });
-              //res.send({name:"test read this!!!! 01984e93jinc jmd jwc "});
+                   res.send(flatten(JSON.parse(resp)));
+                    return resp;
+                  });
+                  //res.send({name:"test read this!!!! 01984e93jinc jmd jwc "});
+      
+    
+            }
+            else
+            {
+    
+               console.log("IS A VIRUS!!!");
+               res.send({"This is a virus":" This is a virus"});
+    
+    
+    
+            }
+    
+        }, 15000);
 
-            var sql = "INSERT INTO `HashId` (`Hash`) VALUES ('" + req.body.Hash +  "')";
-            mySQLconnection.query(sql,  [req.params.id],(err,rows,fields)=>{
-                if(!err){
-                
-                    console.log(rows);
-                }
-                else{
-                
-                    console.log(err);
-                }
-         }
-                )
-
-        }
-        else
-        {
-
-
-           console.log("IS A VIRUS!!!");
-
-
-
-        }
-
+       
         
         
         });
+
+      /**
+       * 
+       * sdk['file-info']({
+
+                id: req.body.Hash,
+              
+                'x-apikey': '7a1937dfdad30b004dae4dd55fd49d28efa658d464dab3df61b5c91b15934eea'
+              
+              }
+            )
+                .then(rem => console.log(rem))
+                .catch(err => console.error(err)); 
+       * 
+       * 
+      */
