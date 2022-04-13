@@ -68,15 +68,15 @@ table {
   }
   
   th {
-	border-bottom: 1px solid rgb(240, 140, 140);
+
 	justify-content: center;
-	border-bottom: 1px solid #ddd;
+
   }
 	
   td {
 	text-align: center;
 	justify-content: center;
-	border-bottom: 1px solid #ddd;
+
   }
 
 h1#title span span {
@@ -258,9 +258,6 @@ align-items: center
 h1 {
 	text-shadow: 1px 1px 10px rgba(black, .5);
 }
-
-
-
 
 
 
