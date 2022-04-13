@@ -22,7 +22,10 @@ const Login = () => {
     <body>
 	<div class="container">
 		<div class="top">
-			<h1 id="title" class="hidden"><span id="logo">Virus <span>Checkers</span></span></h1>
+			  <div id="VirusCheckers">
+    			<img id="VirusLogo" src="https://i.imgur.com/IyLfb58.png"></img>      
+    			<h1 id="title" class="hidden"><span id="logo">Virus <span>Checkers</span></span></h1>
+  			</div>
 		</div>
 		<div class="login-box animated fadeInUp">
 			<div class="box-header">
@@ -38,7 +41,7 @@ const Login = () => {
 			<br/>
 			<button type="submit">Sign In</button>
 			<br/>
-			<span style={{ color: "#a29494", textAlign: "center", display: "inline-block", width: "100%" }}>
+			<span style={{ color: "#a29494", textAlign: "center", display: "inline-block", width: "100%"}}>
             Don't have a account? <Link to="/signup">Create account</Link>
           </span>
 		</div>
