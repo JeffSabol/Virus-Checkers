@@ -118,7 +118,6 @@ else
         <section> 
   
   
- 
   
         <h1>{curd["data.attributes.last_analysis_stats.malicious"]} engines find this to be malicious </h1>
         <tr>Name: {curd["data.attributes.meaningful_name"]}</tr>  
