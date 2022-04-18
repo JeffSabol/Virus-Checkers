@@ -1,6 +1,31 @@
 const request = require('request');
 
-/**for (let index = 0; index < 200; index++) {
+
+
+var mySQLconnection = mysql.createConnection({
+    host: 'localhost',
+    user:'root',
+    password:'password',
+    database: 'sql447',
+    multipleStatements: true
+    
+    /**use ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';**/
+    
+    });
+
+mySQLconnection.connect((err)=> {
+    if(!err){
+    console.log("CONNECTED\n\n\n");
+    }
+    else{
+    
+        console.log(JSON.stringify(err, undefined, 2));
+    }    
+    
+    });
+
+
+for (let index = 0; index < 3; index++) {
 
     let str = `${index}`;
     
@@ -22,6 +47,4 @@ const request = require('request');
     }
 });
     
-
-
-}**/
+}
