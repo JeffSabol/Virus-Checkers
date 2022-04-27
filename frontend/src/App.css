@@ -1,5 +1,20 @@
+#VirusLogo {
+	width: 15%;
+	height: 15%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+#VirusCheckers {
+	padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 50px;
+  padding-left: 50px;
+}
 body {
 	background-size: cover;
+	background-image: linear-gradient(to right, #0f0c29, #302b63, #24243e);
 	font-size: 16px;
 	font-family: 'Lato', sans-serif;
 	font-weight: 300;
@@ -14,7 +29,6 @@ h1#title {
 	color: white;
 	text-shadow: 0 0 10px rgba(0,0,0,0.8);
 	margin: 0 auto;
-	padding-top: 180px;
 	max-width: 300px;
 	text-align: center;
 	position: relative;
@@ -54,15 +68,15 @@ table {
   }
   
   th {
-	border-bottom: 1px solid rgb(240, 140, 140);
+
 	justify-content: center;
-	border-bottom: 1px solid #ddd;
+
   }
 	
   td {
 	text-align: center;
 	justify-content: center;
-	border-bottom: 1px solid #ddd;
+
   }
 
 h1#title span span {
@@ -113,8 +127,7 @@ p.small {
 	max-width: 540px;
 	margin: 0 auto;
 	position: relative;
-	top: 80px;
-	padding-bottom: 30px;
+	padding-bottom: 7px;
 	border-radius: 5px;
 	box-shadow: 0 5px 50px rgba(0,0,0,0.4);
 	text-align: center;
@@ -208,8 +221,14 @@ p.small {
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: rgb(126, 77, 77);
+  color: rgb(76, 222, 74);
   font-family: "Lucida Console", "Courier New", monospace;
+
+}
+
+.inputVal{
+
+	color: rgb(234, 25, 25);
 
 }
 
@@ -245,9 +264,6 @@ align-items: center
 h1 {
 	text-shadow: 1px 1px 10px rgba(black, .5);
 }
-
-
-
 
 
 
@@ -289,7 +305,7 @@ input {
 	background: url('http://thesuiteworld.com/wp-admin/maint/search-icon-white-png-540.png') no-repeat center center, #1E1E20;
 	background-size: 35px 35px;
 	border-radius: 0 20px 20px 0;
-	padding: 15px 25px;
+	padding: 15px 15px;
 	display: inline-block;
 	width: 150px;
 	height: 80px;
