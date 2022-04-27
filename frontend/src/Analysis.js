@@ -6,7 +6,7 @@ import axios from "axios"
 import {useEffect,useState} from 'react';
 
 const baseUrl = "http://localhost:5000";
-const Analysis = () =>
+const Analysis = (Username) =>
   {
     const [Hash, setHash] = useState(""); 
     const [virusReply, setVirusReply] = useState(0); 
@@ -24,6 +24,7 @@ const Analysis = () =>
   }, []);
   
  
+  
   
   const handleSubmit = async (e) => {
     
@@ -59,9 +60,16 @@ const Analysis = () =>
 
 { curdsList.map(curd=> {if(virusReply === 0) {
  return(<td>          <section>
-            
-  <h1 id="title" class="hidden"><span id="logo">Virus <span>Checkers</span></span></h1>
+  
+  
+  
+  <div id="VirusCheckers">
+    <img id="VirusLogo" src="https://i.imgur.com/IyLfb58.png"></img>      
+    <h1 id="title" class="hidden"><span id="logo">Virus <span>Checkers</span></span></h1>
+  </div>
 
+
+  
   </section>
   
 <div class="container">
@@ -96,7 +104,7 @@ else
       {setTimeout(() => {
         console.log("delayed doing this");
         setIsLoading();
-      }, 16000)
+      }, 2000)
     }
       return(
 
@@ -118,6 +126,7 @@ else
         <section> 
   
   
+ 
   
         <h1>{curd["data.attributes.last_analysis_stats.malicious"]} engines find this to be malicious </h1>
         <tr>Name: {curd["data.attributes.meaningful_name"]}</tr>  
@@ -145,4 +154,3 @@ else
 
 
 export default Analysis;
-
