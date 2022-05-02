@@ -211,27 +211,4 @@ return(
 export default SignUp;
 
 
-			<input type="password" id="password" />
-			<br/>
 
-
-
-			<label for="password">Confirm Password</label>
-			<br/>
-			<input  type="password" id="password" />
-			<br/>
-			<button type="submit">Sign Up</button>
-			<br/>
-			<span style={{ color: "#a29494", textAlign: "center", display: "inline-block", width: "100%" }}>
-            Already have an account? <Link to="/">Sign In</Link>
-          </span>
-		</div>
-	</div>
-   
-</body>
-    
-  );
-};
-
-
-export default SignUp;
