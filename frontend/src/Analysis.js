@@ -6,7 +6,7 @@ import axios from "axios"
 import {useEffect,useState} from 'react';
 
 const baseUrl = "http://localhost:5000";
-const Analysis = (Username) =>
+const Analysis = () =>
   {
     const [Hash, setHash] = useState(""); 
     const [virusReply, setVirusReply] = useState(0); 
@@ -24,7 +24,7 @@ const Analysis = (Username) =>
   }, []);
   
  
-  
+   
   
   const handleSubmit = async (e) => {
     
@@ -128,16 +128,26 @@ else
   
  
   
-        <h1>{curd["data.attributes.last_analysis_stats.malicious"]} engines find this to be malicious </h1>
-        <tr>Name: {curd["data.attributes.meaningful_name"]}</tr>  
+        <h1>{curd["data.attributes.last_analysis_stats.malicious"]} out of {curd["data.attributes.last_analysis_stats.malicious"] + curd["data.attributes.last_analysis_stats.undetected"]} engines find this to be malicious </h1>
+        <tr>Popular Name: {curd["data.attributes.meaningful_name"]}</tr>  
          <tr> File type: {curd["data.attributes.type_description"]}</tr> 
+           <tr> File size: {curd["data.attributes.size"]} KB</tr> 
+
           <tr>Threat classification: {curd["data.attributes.popular_threat_classification.suggested_threat_label"]}</tr>  
+            
+          <tr>MD5 representation: {curd["data.attributes.md5"]}</tr>
+          <tr>SHA256 representation: {curd["data.attributes.sha256"]}</tr>
+          <tr>Number of times submitted: {curd["data.attributes.times_submitted"]}</tr>
+          <tr>First Submission Date: {new Date(curd["data.attributes.first_submission_date"]*1000).toLocaleString("en-US")}</tr>
+          <tr>Last Submission Date: {new Date(curd["data.attributes.last_submission_date"]*1000).toLocaleString()}</tr>
+          
 
             </section>
+           
         
         )
 
-    
+
    
     
   }
@@ -151,6 +161,5 @@ else
    
   );
 }
-
 
 export default Analysis;
