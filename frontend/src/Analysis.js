@@ -119,7 +119,7 @@ else
     }
     
 
-      console.log(error);
+      //console.log(error);
       return(   
   
         
@@ -132,9 +132,7 @@ else
         <tr>Popular Name: {curd["data.attributes.meaningful_name"]}</tr>  
          <tr> File type: {curd["data.attributes.type_description"]}</tr> 
            <tr> File size: {curd["data.attributes.size"]} KB</tr> 
-
           <tr>Threat classification: {curd["data.attributes.popular_threat_classification.suggested_threat_label"]}</tr>  
-            
           <tr>MD5 representation: {curd["data.attributes.md5"]}</tr>
           <tr>SHA256 representation: {curd["data.attributes.sha256"]}</tr>
           <tr>Number of times submitted: {curd["data.attributes.times_submitted"]}</tr>
