@@ -6,6 +6,8 @@ const request = require('request');
 const nvt = require('node-virustotal');
 const defaultTimedInstance = nvt.makeAPI();
 const flatten = require('flat').flatten;
+var crypto = require('crypto');
+
 
 let hashExists;
 let usernameExists;
@@ -285,8 +287,11 @@ app.post('/hashes', (req, res)=> {
                         return res.send({hiddenU:"",hiddenE:"Email"});
                     }
                     //PASSOWRD ENCRYPTION HERE
+                    const hashPass = crypto.createHash('sha256').update(req.body.PasswordHash).digest('base64');
 
-                    var sql ="INSERT INTO `userCredTable` (`FullName`, `Email`,`Username`,`PasswordHash`) VALUES ('" + req.body.FullName +  "','" + req.body.Email  +  "','" + req.body.Username  +  "','" + req.body.PasswordHash  +  "')";
+                    //console.log("pass hash:", hashPass);
+
+                    var sql ="INSERT INTO `userCredTable` (`FullName`, `Email`,`Username`,`PasswordHash`) VALUES ('" + req.body.FullName +  "','" + req.body.Email  +  "','" + req.body.Username  +  "','" + hashPass  +  "')";
                     userCredDatabase.query(sql,  [req.params.id],(err,rows,fields)=>{
                        if(!err){
                             
@@ -305,12 +310,7 @@ app.post('/hashes', (req, res)=> {
 
 
                 
-                   
-                    
-            
-               
 
-            
     
             });  
 
