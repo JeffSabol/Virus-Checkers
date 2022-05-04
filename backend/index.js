@@ -7,9 +7,12 @@ const nvt = require('node-virustotal');
 const defaultTimedInstance = nvt.makeAPI();
 const flatten = require('flat').flatten;
 var crypto = require('crypto');
-
+const { stringify } = require('querystring');
+const sha256Length = 64;
 
 let hashExists;
+let entryExists;
+let hashDetailsExist;
 let usernameExists;
 let emailExists;
 
@@ -47,9 +50,22 @@ var userCredDatabase = mysql.createPool({
 app.listen(5000, ()=>console.log("Express server is running at port no :5000"));
 
 
-  function hashEntryExists (checkHash, paramsId) {
+function hashEntryExists (checkHash, paramsId) {
 
     var sql = "SELECT * FROM HashId WHERE EXISTS (SELECT Hash FROM HashId WHERE Hash = '"+checkHash+"');";
+
+      mySQLconnection.query(sql, paramsId, (err,rows,fields)=>{
+        if(!rows[0]) { entryExists = false; }
+        else{entryExists = true; }
+
+     }
+    );
+    
+}
+
+  function hashEntryExistsMD5 (checkHash, paramsId) {
+
+    var sql = "SELECT * FROM HashId WHERE EXISTS (SELECT MD5rep FROM HashId WHERE MD5rep = '"+checkHash+"');";
 
       mySQLconnection.query(sql, paramsId, (err,rows,fields)=>{
         if(!rows[0]) { hashExists = false; }
@@ -59,6 +75,34 @@ app.listen(5000, ()=>console.log("Express server is running at port no :5000"));
     );
     
 }
+
+function hashEntryExistsSha256 (checkHash, paramsId) {
+
+    var sql = "SELECT * FROM HashId WHERE EXISTS (SELECT Sha256rep FROM HashId WHERE Sha256rep = '"+checkHash+"');";
+
+      mySQLconnection.query(sql, paramsId, (err,rows,fields)=>{
+        if(!rows[0]) { hashExists = false; }
+        else{hashExists = true; }
+
+     }
+    );
+    
+}
+
+function hashDetailExists (checkHash, paramsId) {
+
+    var sql = "SELECT * FROM HashId WHERE EXISTS (SELECT FileType FROM HashId WHERE FileType = '"+checkHash+"');";
+
+      mySQLconnection.query(sql, paramsId, (err,rows,fields)=>{
+        if(!rows[0]) { hashDetailsExist = false; }
+        else{hashDetailsExist = true; }
+
+     }
+    );
+    
+}
+
+
   function usernameEntryExists(checkUsername, paramsId) {
 
     var sql = "SELECT * FROM userCredTable WHERE EXISTS (SELECT Username FROM userCredTable WHERE Username = '"+checkUsername+"');";
@@ -123,12 +167,21 @@ app.get('/hashes/:id', (req, res)=>{
 
 
 app.post('/hashes', (req, res)=> {
+            hashEntryExists(req.body.Hash, [req.params.id]); 
 
-        hashEntryExists(req.body.Hash, [req.params.id]);
+        if ((req.body.Hash.length) === sha256Length){
+            hashEntryExistsSha256(req.body.Hash, [req.params.id]);  
+
+        }
+        else{
+            hashEntryExistsMD5(req.body.Hash, [req.params.id]);
+        }
+        hashDetailExists(req.body.Hash, [req.params.id]);
+
         
         //wait for sql reply and edit
         setTimeout(() => {
-            if(!hashExists)
+            if(!(hashExists && hashDetailsExist))
                 {
         
                     console.log("Hash doesn't exist in our database... checking external databases");
@@ -142,29 +195,51 @@ app.post('/hashes', (req, res)=> {
                          res.send(err);
                           return;
                         }
-    
-                        
-                        var sql = "INSERT INTO `HashId` (`Hash`) VALUES ('" + req.body.Hash +  "')";
-                    mySQLconnection.query(sql,  [req.params.id],(err,rows,fields)=>{
-                        if(!err){
-                        
-                            console.log("VIRUS HASH FOUND- ADDED TO DATABASE");                    
+                        resp = flatten(JSON.parse(resp));
+
+                        if(entryExists){
+                            console.log("updating")
+                            var updateQuery = "UPDATE HashId  SET  PopularName = '"+ resp["data.attributes.meaningful_name"] +  "',FileType='" + resp["data.attributes.type_description"]  +  "',MD5rep='"  + resp["data.attributes.md5"]  + "',Sha256rep='"  + resp["data.attributes.sha256"]  +  "',Threat='" + resp["data.attributes.popular_threat_classification.suggested_threat_label"]  + "',FileSize="  + resp["data.attributes.size"]+  ",FirstSub="   +  resp["data.attributes.first_submission_date"]  +  ",LastSub="  + resp["data.attributes.last_submission_date"] +  ",NumTimeSub=" + resp["data.attributes.times_submitted"] +" WHERE  Hash = '" +req.body.Hash+"' ;";
+                            mySQLconnection.query(updateQuery,  [req.params.id],(err,rows,fields)=>{
+                                if(!err){
+                                
+                                    console.log("VIRUS Hash  Details Updated");                    
+                                }
+                                else{
+                                
+                                    console.log(err);
+                                }
+                         }
+                                )
+
                         }
                         else{
-                        
-                            console.log(err);
+
+                            var sql = "INSERT INTO `HashId` (`Hash`, `PopularName`, `FileType`, `MD5rep`,`Sha256rep`, `Threat`, `FileSize`, `FirstSub`, `LastSub`, `NumTimeSub` ) VALUES('" + req.body.Hash +  "','" + resp["data.attributes.meaningful_name"] +  "','" + resp["data.attributes.type_description"]  +   "','" + resp["data.attributes.md5"]  +  "','" + resp["data.attributes.sha256"]  +  "','" + resp["data.attributes.popular_threat_classification.suggested_threat_label"]  +  "','" + resp["data.attributes.size"]+  "','"   +  resp["data.attributes.first_submission_date"]  +  "','" + resp["data.attributes.last_submission_date"] +  "','" + resp["data.attributes.times_submitted"] +  "')";
+                            mySQLconnection.query(sql,  [req.params.id],(err,rows,fields)=>{
+                                if(!err){
+                                
+                                    console.log("VIRUS HASH FOUND- ADDED TO DATABASE");                    
+                                }
+                                else{
+                                
+                                    console.log(err);
+                                }
+                         }
+                                )
                         }
-                 }
-                        )
+
+                     
     
-                       res.send(flatten(JSON.parse(resp)));
+                       res.send(resp);
                         return resp;
                       });
         
                 }
                 else
                 {
-        
+
+                   
                     console.log("THIS EXISTS IN OUR DATABASE- NOW DISPLAYING METADATA");
     
                     const theSameObject = defaultTimedInstance.fileLookup(req.body.Hash, function(err, resp){
@@ -184,7 +259,7 @@ app.post('/hashes', (req, res)=> {
 
         });
 
-        app.post('/hashes', (req, res)=> {
+      app.post('/hashes', (req, res)=> {
 
         hashEntryExists(req.body.Hash, [req.params.id]);
         
@@ -205,12 +280,16 @@ app.post('/hashes', (req, res)=> {
                           return;
                         }
     
+                        resp = flatten(JSON.parse(resp));
                         
-                        var sql = "INSERT INTO `HashId` (`Hash`) VALUES ('" + req.body.Hash +  "')";
+
+                        var sql = "INSERT INTO `HashId` (`Hash`, `PopularName`, `FileType`, `MD5rep`,`Sha256rep`, `Threat`, `FileSize`, `FistSub`, `LastSub`, `NumTimeSub` ) VALUES('" + req.body.Hash +  "','" + resp.data["data.attributes.meaningful_name"] +  "','" + resp.body.FileType  +   "','" + resp.body.MD5rep  +  "','" + resp.body.Sha256rep  +  "','" + resp.body.Threat  +  "','" + resp.body.FileSize  +  resp.body.FirstSub  +  "','" + resp.body.LastSub  +  "','" + resp.body.NumTimeSub  +  "')";
                     mySQLconnection.query(sql,  [req.params.id],(err,rows,fields)=>{
                         if(!err){
                         
-                            console.log("VIRUS HASH FOUND- ADDED TO DATABASE");                    
+                            console.log("VIRUS HASH FOUND- ADDED TO DATABASE");   
+                            
+                 
                         }
                         else{
                         
@@ -219,7 +298,7 @@ app.post('/hashes', (req, res)=> {
                  }
                         )
     
-                       res.send(flatten(JSON.parse(resp)));
+                       res.send(resp);
                         return resp;
                       });
                       //res.send({name:"test read this!!!! 01984e93jinc jmd jwc "});   
