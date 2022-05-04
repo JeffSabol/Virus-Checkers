@@ -162,38 +162,6 @@ else
 
 export default Analysis;
 
-/**
- * CREATE SCHEMA sql447;
-CREATE TABLE sql447.HashId(
-Id INT  Primary key,
-Hash Varchar(255),
-PopularName Varchar(255),
-FileType varchar(255),
-MD5rep   varchar(255),
-Sha256rep   varchar(255),
-Threat Varchar(255),
-FileSize INT,
-FirstSub INT,
-LastSub INT,
-NumTimeSub   INT
 
-
-);
-
-CREATE SCHEMA 447UserCred;
-CREATE TABLE 447UserCred.userCredTable(
-PersonId INT  Primary key,
-FullName Varchar(255),
-Email varchar(255),
-Username   varchar(255),
-PasswordHash   varchar(255)
-
-
-);
-
-
-
-
-*/
 
 
