@@ -341,6 +341,7 @@ app.post('/hashes', (req, res)=> {
           
            var sql = "SELECT * FROM userCredTable WHERE EXISTS (SELECT Username FROM userCredTable WHERE Username = '"+req.body.Username +"');";
 
+           
            userCredDatabase.query(sql, [req.params.id], (err,rows,fields)=>{
               if(!rows[0]) { if(rows[0].Username ===req.body.Username && rows[0].PasswordHash ===req.body.PasswordHash  ){res.send({login:"success"});}  }
               else{res.send({login:"success"});}
