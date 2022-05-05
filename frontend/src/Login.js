@@ -42,15 +42,17 @@ const Login = () => {
 				  
 				});
 				
+				console.log(data.data.login);
+
 				setCredsList([data.data]);
 
-				if(data.data.login){
+				if(data.data.login === "success"){
 
-					
+					window.localStorage.setItem("token", res.data.token);
+					navigate("/analysis");
 
 				}
-				window.localStorage.setItem("token", res.data.token);
-        navigate("/analysis");
+			
 				/** Update dataset list entries**/
 				/** Reset entries**/
 				setUsername("");
