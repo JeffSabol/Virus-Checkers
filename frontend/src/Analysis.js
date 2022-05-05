@@ -4,25 +4,58 @@ import Login from "./Login.js";
 import axios from "axios"
 
 import {useEffect,useState} from 'react';
+import { Link , useNavigate} from "react-router-dom";
 
 const baseUrl = "http://localhost:5000";
 const Analysis = () =>
   {
+
     const [Hash, setHash] = useState(""); 
     const [virusReply, setVirusReply] = useState(0); 
     const [curdsList, setcurdsList] = useState([0]);
+    const [loggedUser, setLoggedUser] = useState([0]);
     const [isLoading, setIsLoading] = useState([0]);
-
+    const navigate = useNavigate();
 
     const handleChangeHash = e => {
       
       setHash(e.target.value);
       console.log(Hash)
   }
+
   useEffect(() => {
-    
-  }, []);
+    componentDidMount();
+    getUserData();
+  });
+
+  const getUserData = async()=>{
+
+    let token = window.localStorage.getItem("token");
+    try {
+      const data =  await axios.post(`${baseUrl}/users`, {
+          token: token
+        
+      });
+      setLoggedUser(data.data);
+      console.log("Logged in User: "+ data.data.Username +" , "+data.data.FullName+" , "+ data.data.Email);
+      
+      /** Update dataset list entries**/
+      /** Reset entries**/
+      
+      
+  } catch (err) {
+      console.log(err.message);
+  }
+
+  }
   
+  const componentDidMount = (e) => {
+    if (!window.localStorage.getItem("token")) {
+      //redirect to Login
+      console.log("redirect to login");
+      navigate("/");
+    }
+  }
  
    
   
@@ -58,9 +91,34 @@ const Analysis = () =>
    
          <div className="App-header">
 
+
+
+<tr>{loggedUser.FullName}</tr>
+
+
+
+<button
+  onClick={e => {
+    window.localStorage.removeItem("token");
+    setLoggedUser([0]);
+    navigate("/");
+    
+  }}
+>
+  Logout
+</button>  
+
+
+
 { curdsList.map(curd=> {if(virusReply === 0) {
- return(<td>          <section>
+ return(<td> 
   
+   
+
+
+
+      <section>
+    
   
   
   <div id="VirusCheckers">
@@ -78,6 +136,7 @@ const Analysis = () =>
 <input  class="submit" type="submit" value="Check Hash " />
 </form>
 
+
 </div></td>)
 
 }
@@ -89,10 +148,28 @@ else
     if(curd.error.message ===  "Resource not found.")
   {
     return(   
-      <h1>   
+      <section>
+        
+        
+        
+        <h1>   
        This doesn't appear to be a virus.
       </h1>
-      )
+      
+      <button
+  onClick={e => {
+    setVirusReply(0);
+    
+  }}
+>
+  Check another Hash
+</button>  
+      </section>
+      
+
+        
+
+            )
   }
     
   } 
@@ -140,6 +217,14 @@ else
           <tr>Last Submission Date: {new Date(curd["data.attributes.last_submission_date"]*1000).toLocaleString()}</tr>
           
 
+          <button
+  onClick={e => {
+    setVirusReply(0);
+    
+  }}
+>
+  Check another Hash
+</button>  
 
             </section>
            

@@ -4,6 +4,7 @@ import { Link , useNavigate} from "react-router-dom";
 import { BrowserRouter } from 'react-router-dom';
 import Analysis from "./Analysis.js";
 import axios from "axios"
+import {useEffect} from 'react';
 
 const baseUrl = "http://localhost:5000";
 
@@ -16,6 +17,18 @@ const Login = () => {
 	const [credsList, setCredsList] = useState([0]);
     const [signup, setSignUp] = useState([0]);
 
+	useEffect(() => {
+		componentDidMount();
+		
+	  }, []);
+
+	const componentDidMount = (e) => {
+		if (window.localStorage.getItem("token")) {
+		  //redirect to Login
+		  console.log("redirect to login");
+		  navigate("/analysis");
+		}
+	  }
 
 	const handleChangeUsername = e => {
       

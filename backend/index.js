@@ -169,6 +169,35 @@ app.get('/hashes/:id', (req, res)=>{
     });
 
 
+    app.post('/users', (req, res)=>{
+
+
+
+
+        let token = atob(req.body.token);
+        var sql = "(SELECT Username,Email,FullName FROM userCredTable WHERE Username = '"+token +"');";
+        userCredDatabase.query(sql, [req.params.id],(err,rows,fields)=>{
+            if(!err){
+            
+                res.send(
+                    {
+                        Username: token,
+                        FullName:rows[0].FullName,
+                        Email: rows[0].Email
+
+
+                    }
+
+                );
+            }
+            else{
+            
+                console.log(err);
+            }
+            })
+    
+        });
+
 
 
 app.post('/hashes', (req, res)=> {
@@ -339,33 +368,30 @@ app.post('/hashes', (req, res)=> {
 
         app.post('/login', (req, res)=> {
 
-           console.log(req.body.Username+" tried to login")
-          
-           var sql = " (SELECT * FROM userCredTable WHERE Username = '"+req.body.Username +"');";
-
-           userCredDatabase.query(sql, [req.params.id], (err,rows,fields)=>{
-
-                console.log(rows[0]);        
-                      if(!rows[0]) { 
-                        res.send({login:"failure"});  
-                     
-            }
-              else{
-                  
-                if(rows[0].Username ===req.body.Username && rows[0].PasswordHash ===req.body.PasswordHash  ){
-                  
-                    let tokenm = btoa(req.body.Username + req.body.PasswordHash);
-                    res.send({login:"success",Username: req.body.Username ,FullName:rows[0].FullName  , Email:rows[0].Email,token:tokenm });
-                }  
-                else{
-                    res.send({login:"failure"});  
-
-                }
-                }
-      
-           })
-        
-            });   
+            console.log(req.body.Username+" tried to login")
+           
+            var sql = "(SELECT Username,PasswordHash FROM userCredTable WHERE Username = '"+req.body.Username +"');";
+ //SELECT * FROM userCredTable WHERE EXISTS 
+     let hashPass = crypto.createHash('sha256').update(req.body.PasswordHash).digest('base64');
+            userCredDatabase.query(sql, [req.params.id], (err,rows,fields)=>{
+             console.log("hello");
+             console.log(rows); 
+             if(!rows[0]) {
+                 console.log("0");  
+                 res.send({login:"failure"}); }
+             else{
+                 
+                 if(rows[0].Username ===req.body.Username && rows[0].PasswordHash ===hashPass  ){
+                    let token = btoa(rows[0].Username);
+                     res.send({login:"success", token:token});
+                   
+                 }
+                 console.log("1");
+                 }
+       
+            })
+         
+             });   
         
 
 
@@ -427,4 +453,9 @@ app.post('/hashes', (req, res)=> {
 
 
            
+            
+
+
+
+
             

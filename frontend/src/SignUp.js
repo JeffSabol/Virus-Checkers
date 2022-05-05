@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Route,Routes } from 'react-router-dom';
+import {useNavigate} from "react-router-dom";
 import './App.css';
 import axios from "axios"
 import Login from "./Login.js";
@@ -10,7 +11,7 @@ const baseUrl = "http://localhost:5000";
 
 const SignUp = () => {
   
-
+	const navigate = useNavigate();
 	const [Name, setName] = useState(""); 
 	const [Email, setEmail] = useState(""); 
 	const [Username, setUsername] = useState(""); 
@@ -72,7 +73,6 @@ const SignUp = () => {
 			setpassConfStatus("");
 
 		}
-		/*Normal Update */
 		
 			try {
 				const data =  await axios.post(`${baseUrl}/signup`, {
@@ -105,6 +105,7 @@ const SignUp = () => {
 					if (data.data.status === "success"){
 
 						setAccountCreated("Created");
+						navigate("/");
 
 					}
 
