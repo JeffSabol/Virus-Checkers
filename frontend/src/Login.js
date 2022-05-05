@@ -1,14 +1,16 @@
 import './App.css';
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BrowserRouter } from 'react-router-dom';
 import Analysis from "./Analysis.js";
 import axios from "axios"
 
 const baseUrl = "http://localhost:5000";
+
+
 const Login = () => {
 
-
+	const navigate = useNavigate();
 	const [Username, setUsername] = useState(""); 
 	const [Password, setPassword] = useState(""); 
 
@@ -42,11 +44,19 @@ const Login = () => {
 				});
 				console.log(data.data.login);
 				setCredsList([data.data]);
+
+				//window.localStorage.setItem("token", data.data.token);
+				//this.props.history.push("/analysis");
+				if(data.data.login === "success"){
+					navigate("/analysis");
+				}
 				/** Update dataset list entries**/
 				/** Reset entries**/
 				setUsername("");
 				setPassword("");
 				
+
+
 			} catch (err) {
 				console.log(err.message);
 			}
@@ -95,3 +105,4 @@ const Login = () => {
 };
 
 export default Login;
+
