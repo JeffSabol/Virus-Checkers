@@ -40,7 +40,7 @@ const Login = () => {
 					PasswordHash:Password
 				  
 				});
-				
+				console.log(data.data.login);
 				setCredsList([data.data]);
 				/** Update dataset list entries**/
 				/** Reset entries**/

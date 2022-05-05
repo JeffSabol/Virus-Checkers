@@ -339,12 +339,24 @@ app.post('/hashes', (req, res)=> {
 
            console.log(req.body.Username+" tried to login")
           
-           var sql = "SELECT * FROM userCredTable WHERE EXISTS (SELECT Username FROM userCredTable WHERE Username = '"+req.body.Username +"');";
-
-           
+           var sql = "(SELECT Username,PasswordHash FROM userCredTable WHERE Username = '"+req.body.Username +"');";
+//SELECT * FROM userCredTable WHERE EXISTS 
+    let hashPass = crypto.createHash('sha256').update(req.body.PasswordHash).digest('base64');
            userCredDatabase.query(sql, [req.params.id], (err,rows,fields)=>{
-              if(!rows[0]) { if(rows[0].Username ===req.body.Username && rows[0].PasswordHash ===req.body.PasswordHash  ){res.send({login:"success"});}  }
-              else{res.send({login:"success"});}
+            console.log("hello");
+            console.log(rows); 
+            if(!rows[0]) {
+                console.log("0");  
+                res.send({login:"failure"}); }
+            else{
+                
+                if(rows[0].Username ===req.body.Username && rows[0].PasswordHash ===hashPass  ){
+                    
+                    res.send({login:"success"});
+                  
+                }
+                console.log("1");
+                }
       
            })
         
