@@ -256,6 +256,8 @@ app.post('/hashes', (req, res)=> {
                         
     
                        res.send(flatten(JSON.parse(resp)));
+
+
                         return resp;
                       });  
                 }
@@ -339,11 +341,27 @@ app.post('/hashes', (req, res)=> {
 
            console.log(req.body.Username+" tried to login")
           
-           var sql = "SELECT * FROM userCredTable WHERE EXISTS (SELECT Username FROM userCredTable WHERE Username = '"+req.body.Username +"');";
+           var sql = " (SELECT * FROM userCredTable WHERE Username = '"+req.body.Username +"');";
 
            userCredDatabase.query(sql, [req.params.id], (err,rows,fields)=>{
-              if(!rows[0]) { if(rows[0].Username ===req.body.Username && rows[0].PasswordHash ===req.body.PasswordHash  ){res.send({login:"success"});}  }
-              else{res.send({login:"success"});}
+
+                console.log(rows[0]);        
+                      if(!rows[0]) { 
+                        res.send({login:"failure"});  
+                     
+            }
+              else{
+                  
+                if(rows[0].Username ===req.body.Username && rows[0].PasswordHash ===req.body.PasswordHash  ){
+                  
+                    let tokenm = btoa(req.body.Username + req.body.PasswordHash);
+                    res.send({login:"success",Username: req.body.Username ,FullName:rows[0].FullName  , Email:rows[0].Email,token:tokenm });
+                }  
+                else{
+                    res.send({login:"failure"});  
+
+                }
+                }
       
            })
         
@@ -408,36 +426,5 @@ app.post('/hashes', (req, res)=> {
             });  
 
 
-            /**CREATE SCHEMA sql447;
-            CREATE TABLE sql447.HashId(
-            Id INT  Primary key,
-            Hash Varchar(255),
-            PopularName Varchar(255),
-            FileType varchar(255),
-            MD5rep   varchar(255),
-            Sha256rep   varchar(255),
-            Threat Varchar(255),
-            FileSize INT,
-            FirstSub INT,
-            LastSub INT,
-            NumTimeSub   INT
-            
-            
-            );
-            
-            CREATE SCHEMA 447UserCred;
-            CREATE TABLE 447UserCred.userCredTable(
-            PersonId INT  Primary key,
-            FullName Varchar(255),
-            Email varchar(255),
-            Username   varchar(255),
-            PasswordHash   varchar(255)
-            
-            
-            );
-            
-            
-            
-            
-            **/
+           
             

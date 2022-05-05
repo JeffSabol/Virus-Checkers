@@ -12,11 +12,9 @@ function App() {
 
     <Routes>
       <Route path='/' element={<Login />} />
-    <Route path='/analysis' element={<Analysis />} />
        <Route path='/signup' element={<SignUp />} />
-       
+       <Route path='/analysis' element={<Analysis />} />
       
-
 
     </Routes>
   

@@ -2,6 +2,7 @@ const request = require('request');
 
 
 
+
 var mySQLconnection = mysql.createConnection({
     host: 'localhost',
     user:'root',
@@ -10,6 +11,7 @@ var mySQLconnection = mysql.createConnection({
     multipleStatements: true
     
     /**use ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';**/
+    
     
     });
 

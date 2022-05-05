@@ -86,7 +86,7 @@ else
   
   console.log({curd});
   try {
-    if(curd.error.code)
+    if(curd.error.message ===  "Resource not found.")
   {
     return(   
       <h1>   
@@ -140,6 +140,7 @@ else
           <tr>Last Submission Date: {new Date(curd["data.attributes.last_submission_date"]*1000).toLocaleString()}</tr>
           
 
+
             </section>
            
         
@@ -165,3 +166,28 @@ export default Analysis;
 
 
 
+
+/**
+ cd frontend
+ npm install
+ npm start
+
+
+
+
+ cd backend
+ npminstall
+ cd node_modules/node-virustotal/ 
+ emacs v3.js
+ *edit the default API key and  change default delay*
+ cd ....
+ node index.js
+
+
+
+
+
+
+
+
+ */
