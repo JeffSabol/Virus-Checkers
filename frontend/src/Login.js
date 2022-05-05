@@ -6,13 +6,13 @@ import Analysis from "./Analysis.js";
 import axios from "axios"
 
 const baseUrl = "http://localhost:5000";
-const navigate = useNavigate();
+
 const Login = () => {
 
 
 	const [Username, setUsername] = useState(""); 
 	const [Password, setPassword] = useState(""); 
-
+	const navigate = useNavigate();
 	const [credsList, setCredsList] = useState([0]);
     const [signup, setSignUp] = useState([0]);
 
@@ -48,7 +48,7 @@ const Login = () => {
 
 				if(data.data.login === "success"){
 
-					window.localStorage.setItem("token", res.data.token);
+					window.localStorage.setItem("token", data.data.token);
 					navigate("/analysis");
 
 				}
