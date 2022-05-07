@@ -68,7 +68,7 @@ function hashEntryExists (checkHash, paramsId) {
     
 }
 
-  function hashEntryExistsMD5 (checkHash, paramsId) {
+function hashEntryExistsMD5 (checkHash, paramsId) {
 
     var sql = "SELECT * FROM HashId WHERE EXISTS (SELECT MD5rep FROM HashId WHERE MD5rep = '"+checkHash+"');";
 
@@ -108,7 +108,7 @@ function hashDetailExists (checkHash, paramsId) {
 }
 
 
-  function usernameEntryExists(checkUsername, paramsId) {
+function usernameEntryExists(checkUsername, paramsId) {
 
     var sql = "SELECT * FROM userCredTable WHERE EXISTS (SELECT Username FROM userCredTable WHERE Username = '"+checkUsername+"');";
 
@@ -121,7 +121,7 @@ function hashDetailExists (checkHash, paramsId) {
     
 }
 
-  function emailEntryExists(checkEmail, paramsId) {
+function emailEntryExists(checkEmail, paramsId) {
 
     var sql = "SELECT * FROM userCredTable WHERE EXISTS (SELECT Email FROM userCredTable WHERE Email = '"+checkEmail+"');";
 
@@ -169,7 +169,7 @@ app.get('/hashes/:id', (req, res)=>{
     });
 
 
-    app.post('/users', (req, res)=>{
+app.post('/users', (req, res)=>{
 
 
 
@@ -295,7 +295,7 @@ app.post('/hashes', (req, res)=> {
 
         });
 
-      app.post('/hashes', (req, res)=> {
+app.post('/hashes', (req, res)=> {
 
         hashEntryExists(req.body.Hash, [req.params.id]);
         
@@ -366,7 +366,7 @@ app.post('/hashes', (req, res)=> {
 
 
 
-        app.post('/login', (req, res)=> {
+app.post('/login', (req, res)=> {
 
             console.log(req.body.Username+" tried to login")
            
@@ -395,7 +395,7 @@ app.post('/hashes', (req, res)=> {
         
 
 
-            app.post('/signup', (req, res)=> {
+app.post('/signup', (req, res)=> {
 
            
                 console.log(req.body.FullName+" tried to SignUp")

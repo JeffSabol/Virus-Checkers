@@ -14,7 +14,7 @@ const Analysis = () =>
     const [virusReply, setVirusReply] = useState(0); 
     const [curdsList, setcurdsList] = useState([0]);
     const [loggedUser, setLoggedUser] = useState([0]);
-    const [isLoading, setIsLoading] = useState([0]);
+    const [isLoading, setIsLoading] = useState(1);
     const navigate = useNavigate();
 
     const handleChangeHash = e => {
@@ -60,9 +60,10 @@ const Analysis = () =>
    
   
   const handleSubmit = async (e) => {
-    
     e.preventDefault();
+    setIsLoading(1);
     setVirusReply(1);
+   
     console.log("called here")
     
     /*Normal Update */
@@ -93,11 +94,19 @@ const Analysis = () =>
 
 
 
+<tr>{loggedUser.Username}</tr>
+<br/>
 <tr>{loggedUser.FullName}</tr>
+<br/>
+<tr>{loggedUser.Email}</tr>
+<br/>
 
 
 
-<button
+
+
+
+<button1 
   onClick={e => {
     window.localStorage.removeItem("token");
     setLoggedUser([0]);
@@ -106,14 +115,19 @@ const Analysis = () =>
   }}
 >
   Logout
-</button>  
+</button1>  
 
 
 
-{ curdsList.map(curd=> {if(virusReply === 0) {
+{ curdsList.map(curd=> {
+  
+  if(virusReply === 0) {
+  
+    
+
  return(<td> 
   
-   
+  
 
 
 
@@ -129,9 +143,9 @@ const Analysis = () =>
 
   
   </section>
-  
+
 <div class="container">
-<form  onSubmit={handleSubmit} >
+<form  onSubmit={    handleSubmit} >
 <input  onChange = {handleChangeHash} class="search" type="text" id="search" />
 <input  class="submit" type="submit" value="Check Hash " />
 </form>
@@ -144,6 +158,26 @@ else
 {
   
   console.log({curd});
+
+  // run for 2 sec
+  while(isLoading )
+  {
+    console.log("doing this");
+    
+    {setTimeout(() => {
+      console.log("delayed doing this");
+      setIsLoading(0);
+    }, 2500)
+  }
+    return(
+
+      <div className="spinner-container">
+    
+      <div className="loading-spinner"></div>
+    </div>
+
+    )
+ }
   try {
     if(curd.error.message ===  "Resource not found.")
   {
@@ -158,7 +192,11 @@ else
       
       <button
   onClick={e => {
+    navigate("/analysis");
+
+    setIsLoading(1);
     setVirusReply(0);
+   
     
   }}
 >
@@ -174,36 +212,10 @@ else
     
   } 
   catch (error) {
-    while(isLoading)
-    {
-      console.log("doing this");
-      
-      {setTimeout(() => {
-        console.log("delayed doing this");
-        setIsLoading();
-      }, 2000)
-    }
-      return(
-
-        <div className="spinner-container">
-      
-        <div className="loading-spinner"></div>
-      </div>
-
-      )
-
-
-    }
-    
-
-      //console.log(error);
       return(   
   
         
         <section> 
-  
-  
- 
   
         <h1>{curd["data.attributes.last_analysis_stats.malicious"]} out of {curd["data.attributes.last_analysis_stats.malicious"] + curd["data.attributes.last_analysis_stats.undetected"]} engines find this to be malicious </h1>
         <tr>Popular Name: {curd["data.attributes.meaningful_name"]}</tr>  
@@ -219,8 +231,12 @@ else
 
           <button
   onClick={e => {
-    setVirusReply(0);
     
+    navigate("/analysis");
+
+    setIsLoading(1);
+    setVirusReply(0);
+   
   }}
 >
   Check another Hash
