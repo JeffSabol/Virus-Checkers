@@ -26,6 +26,11 @@ const SignUp = () => {
 
 
 
+	useEffect(() => {
+		componentDidMount();
+
+	  }, []); 
+	  
 	const handleChangeConf = e => {
       
 		setConf(e.target.value);
@@ -52,6 +57,13 @@ const SignUp = () => {
 		setPassword(e.target.value);
 		
 	}
+	const componentDidMount = (e) => {
+		if (window.localStorage.getItem("token")) {
+		  //redirect to Login
+		  console.log("redirect to login");
+		  navigate("/analysis");
+		}
+	  }
 
 
 	const handleSignup =  async (e) => {

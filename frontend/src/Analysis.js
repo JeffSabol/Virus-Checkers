@@ -93,20 +93,10 @@ const Analysis = () =>
          <div className="App-header">
 
 
-
-<tr>{loggedUser.Username}</tr>
-<br/>
-<tr>{loggedUser.FullName}</tr>
-<br/>
-<tr>{loggedUser.Email}</tr>
-<br/>
-
-
-
-
-
-
-<button1 
+<nav id="topnav">
+         <a id="logo" class="nav-link" >VirusCheckers</a>
+         <a class="nav-link" >About</a>
+         <button1 id = "logoutBtn" 
   onClick={e => {
     window.localStorage.removeItem("token");
     setLoggedUser([0]);
@@ -116,7 +106,13 @@ const Analysis = () =>
 >
   Logout
 </button1>  
+      </nav>
 
+      <tr>Username: {loggedUser.Username}</tr>
+
+<tr>Name: {loggedUser.FullName}</tr>
+
+<tr> Email: {loggedUser.Email}</tr>
 
 
 { curdsList.map(curd=> {
@@ -125,10 +121,13 @@ const Analysis = () =>
   
     
 
- return(<td> 
+ return(
+ 
+ 
+ 
+ <td> 
   
   
-
 
 
       <section>

@@ -311,3 +311,33 @@ input {
 	height: 80px;
   color: aliceblue;
 }
+#topnav {
+	width: 100%;
+ 
+	position: fixed;
+	top: 0;
+	left: 0;
+ 
+	background-color: #4156a3;
+ 
+	font-family: Arial, sans-serif;
+	font-size: 15px;
+ }
+ #logoutBtn {
+	position:fixed;
+   right:10px;
+   top:10px;
+ }
+ 
+ .nav-link {
+	display: inline-block;
+	width: 100px;
+	height: 55px;
+ 
+	color: White;
+ 
+	text-align: center;
+	line-height: 55px;
+ 
+	text-decoration: none;
+ }
