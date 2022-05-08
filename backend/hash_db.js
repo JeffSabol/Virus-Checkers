@@ -27,7 +27,7 @@ mySQLconnection.connect((err)=> {
     });
 
 
-for (let index = 0; index < 3; index++) {
+for (let index = 0; index < 1; index++) {
 
     let str = `${index}`;
     

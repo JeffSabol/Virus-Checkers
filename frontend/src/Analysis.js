@@ -26,7 +26,7 @@ const Analysis = () =>
   useEffect(() => {
     componentDidMount();
     getUserData();
-  });
+  },[]);
 
   const getUserData = async()=>{
 

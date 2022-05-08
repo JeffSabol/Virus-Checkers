@@ -414,6 +414,11 @@ app.post('/login', (req, res)=> {
                      res.send({login:"success", token:token});
                    
                  }
+                 else{
+                    res.send({login:"failure"}); 
+
+
+                 }
                  console.log("1");
                  }
        

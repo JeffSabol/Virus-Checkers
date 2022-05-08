@@ -15,11 +15,11 @@ const Login = () => {
 	const [Password, setPassword] = useState(""); 
 	const navigate = useNavigate();
 	const [credsList, setCredsList] = useState([0]);
-    const [signup, setSignUp] = useState([0]);
+    const [loginConf, setLoginConf] = useState("");
 
 	useEffect(() => {
 		componentDidMount();
-		
+
 	  }, []);
 
 	const componentDidMount = (e) => {
@@ -42,6 +42,7 @@ const Login = () => {
 	}
 
 	const handleLogin = async (e) => {
+		setLoginConf("");
     
 		e.preventDefault();
 		console.log("logining in")
@@ -66,6 +67,12 @@ const Login = () => {
 
 				}
 			
+				if (data.data.login === "failure"){
+						
+					setLoginConf("Invalid Login");
+				
+
+			}
 				/** Update dataset list entries**/
 				/** Reset entries**/
 				setUsername("");
@@ -87,15 +94,30 @@ const Login = () => {
     
     <body>
 	<div class="container">
+
+
+	
+	
 		<div class="top">
 			<h1 id="title" class="hidden"><span id="logo">Virus <span>Checkers</span></span></h1>
 		</div>
 		
 		<div class="login-box animated fadeInUp">
+
+
 			<div class="box-header">
 				<h2>Log In</h2>
+
+				
 			</div>
+	
+			<div class="inputVal">
+
+{loginConf} 
+</div>	
+
 			<label for="username">Username</label>
+		
 			<br/>
 			<input onChange = {handleChangeUsername} type="text" id="username" />
 			<br/>
