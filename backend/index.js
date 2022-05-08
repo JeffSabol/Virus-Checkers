@@ -96,11 +96,15 @@ function hashEntryExistsSha256 (checkHash, paramsId) {
 
 function hashDetailExists (checkHash, paramsId) {
 
-    var sql = "SELECT * FROM HashId WHERE EXISTS (SELECT FileType FROM HashId WHERE FileType = '"+checkHash+"');";
+    var sql = "(SELECT FileType FROM HashId WHERE Hash = '"+checkHash+"' );";
 
       mySQLconnection.query(sql, paramsId, (err,rows,fields)=>{
-        if(!rows[0]) { hashDetailsExist = false; }
-        else{hashDetailsExist = true; }
+        if(rows[0]) {
+             if (rows[0].FileType === ""){  hashDetailsExist = false;  } 
+            else{hashDetailsExist = true; }   
+    }
+
+       
 
      }
     );
@@ -218,8 +222,7 @@ app.post('/hashes', (req, res)=> {
             if(!(hashExists && hashDetailsExist))
                 {
         
-                    console.log("Hash doesn't exist in our database... checking external databases");
-        
+                    
                     //API virus total
                     //7a1937dfdad30b004dae4dd55fd49d28efa658d464dab3df61b5c91b15934eea         
                     //change default key in v3
@@ -232,8 +235,8 @@ app.post('/hashes', (req, res)=> {
                         resp = flatten(JSON.parse(resp));
 
                         if(entryExists){
-                            console.log("updating")
-                            var updateQuery = "UPDATE HashId  SET  PopularName = '"+ resp["data.attributes.meaningful_name"] +  "',FileType='" + resp["data.attributes.type_description"]  +  "',MD5rep='"  + resp["data.attributes.md5"]  + "',Sha256rep='"  + resp["data.attributes.sha256"]  +  "',Threat='" + resp["data.attributes.popular_threat_classification.suggested_threat_label"]  + "',FileSize="  + resp["data.attributes.size"]+  ",FirstSub="   +  resp["data.attributes.first_submission_date"]  +  ",LastSub="  + resp["data.attributes.last_submission_date"] +  ",NumTimeSub=" + resp["data.attributes.times_submitted"] +" WHERE  Hash = '" +req.body.Hash+"' ;";
+                            console.log("updating hash details ")
+                            var updateQuery = "UPDATE HashId  SET  PopularName = '"+ resp["data.attributes.meaningful_name"] +  "',FileType='" + resp["data.attributes.type_description"]  +  "',MD5rep='"  + resp["data.attributes.md5"]  + "',Sha256rep='"  + resp["data.attributes.sha256"]  +  "',Threat='" + resp["data.attributes.popular_threat_classification.suggested_threat_label"]  + "',FileSize="  + resp["data.attributes.size"]+  ",FirstSub="   +  resp["data.attributes.first_submission_date"]  +  ",LastSub="  + resp["data.attributes.last_submission_date"] +  ",NumTimeSub=" + resp["data.attributes.times_submitted"] + ",NumEnginesDetected="  + resp["data.attributes.last_analysis_stats.malicious"] +  ",NumEnginesUndetected=" + resp["data.attributes.last_analysis_stats.undetected"] +" WHERE  Hash = '" +req.body.Hash+"' ;";
                             mySQLconnection.query(updateQuery,  [req.params.id],(err,rows,fields)=>{
                                 if(!err){
                                 
@@ -248,8 +251,9 @@ app.post('/hashes', (req, res)=> {
 
                         }
                         else{
+                            console.log("Hash doesn't exist in our database... checking external databases");
 
-                            var sql = "INSERT INTO `HashId` (`Hash`, `PopularName`, `FileType`, `MD5rep`,`Sha256rep`, `Threat`, `FileSize`, `FirstSub`, `LastSub`, `NumTimeSub` ) VALUES('" + req.body.Hash +  "','" + resp["data.attributes.meaningful_name"] +  "','" + resp["data.attributes.type_description"]  +   "','" + resp["data.attributes.md5"]  +  "','" + resp["data.attributes.sha256"]  +  "','" + resp["data.attributes.popular_threat_classification.suggested_threat_label"]  +  "','" + resp["data.attributes.size"]+  "','"   +  resp["data.attributes.first_submission_date"]  +  "','" + resp["data.attributes.last_submission_date"] +  "','" + resp["data.attributes.times_submitted"] +  "')";
+                            var sql = "INSERT INTO `HashId` (`Hash`, `PopularName`, `FileType`, `MD5rep`,`Sha256rep`, `Threat`, `FileSize`, `FirstSub`, `LastSub`, `NumTimeSub` , `NumEnginesDetected` , `NumEnginesUndetected` ) VALUES('" + req.body.Hash +  "','" + resp["data.attributes.meaningful_name"] +  "','" + resp["data.attributes.type_description"]  +   "','" + resp["data.attributes.md5"]  +  "','" + resp["data.attributes.sha256"]  +  "','" + resp["data.attributes.popular_threat_classification.suggested_threat_label"]  +  "'," + resp["data.attributes.size"]+  ","   +  resp["data.attributes.first_submission_date"]  +  "," + resp["data.attributes.last_submission_date"] +  "," + resp["data.attributes.times_submitted"] +","+ resp["data.attributes.last_analysis_stats.malicious"] +  "," + resp["data.attributes.last_analysis_stats.undetected"] +  ")";
                             mySQLconnection.query(sql,  [req.params.id],(err,rows,fields)=>{
                                 if(!err){
                                 
@@ -272,26 +276,50 @@ app.post('/hashes', (req, res)=> {
                 }
                 else
                 {
+                    console.log("THIS EXISTS IN OUR DATABASE- NOW DISPLAYING DATA");
 
-                   
-                    console.log("THIS EXISTS IN OUR DATABASE- NOW DISPLAYING METADATA");
-    
-                    const theSameObject = defaultTimedInstance.fileLookup(req.body.Hash, function(err, resp){
-                        if (err) {
-                          console.log('Well, crap.');
-                         res.send(err);
-                          return;
-                        }
+
+                    var sql = "(SELECT * FROM HashId WHERE  Hash = '"+req.body.Hash +"'  OR Sha256rep = '"+req.body.Hash +"'  OR  MD5rep = '"+req.body.Hash +"'  );";
+                    mySQLconnection.query(sql, [req.params.id],(err,rows,fields)=>{
+                        if(!err){
                         
+                            res.send(
+                                
+                        
+                                {
     
-                       res.send(flatten(JSON.parse(resp)));
+                                    "data.attributes.last_analysis_stats.malicious": rows[0].NumEnginesDetected ,
+                                    "data.attributes.last_analysis_stats.undetected": rows[0].NumEnginesUndetected ,
+                                    "data.attributes.meaningful_name": rows[0].PopularName ,
+                                    "data.attributes.size":rows[0].FileSize ,
+                                    "data.attributes.type_description": rows[0].FileType,
+                                    "data.attributes.popular_threat_classification.suggested_threat_label": rows[0].Threat  ,
+                                    "data.attributes.md5": rows[0].MD5rep  ,
+                                    "data.attributes.sha256": rows[0].Sha256rep ,
+                                    "data.attributes.times_submitted": rows[0].NumTimeSub ,
+                                    "data.attributes.first_submission_date": rows[0].FirstSub,
+                                    "data.attributes.last_submission_date":rows[0]. LastSub
+                                
+                                
+                                }
+            
+                            );
+                        }
+                        else{
+                        
+                            console.log(err);
+                        }
+                        });
 
 
-                        return resp;
-                      });  
                 }
+
         }, 1000);
       
+
+
+
+
 
         });
 
@@ -458,4 +486,25 @@ app.post('/signup', (req, res)=> {
 
 
 
-            
+            /**
+             * 
+             * 
+CREATE SCHEMA sql447;
+CREATE TABLE sql447.HashId(
+Id INT  Primary key AUTO_INCREMENT,
+Hash Varchar(255),
+PopularName Varchar(255),
+FileType varchar(255),
+MD5rep   varchar(255),
+Sha256rep   varchar(255),
+Threat Varchar(255),
+FileSize INT,
+FirstSub INT,
+LastSub INT,
+NumTimeSub   INT,
+NumEnginesDetected INT,
+NumEnginesUndetected INT
+
+
+);
+             */
