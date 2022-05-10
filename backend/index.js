@@ -298,7 +298,8 @@ app.post('/hashes', (req, res)=> {
                                     "data.attributes.sha256": rows[0].Sha256rep ,
                                     "data.attributes.times_submitted": rows[0].NumTimeSub ,
                                     "data.attributes.first_submission_date": rows[0].FirstSub,
-                                    "data.attributes.last_submission_date":rows[0]. LastSub
+                                    "data.attributes.last_submission_date":rows[0]. LastSub,
+                                    inLocalDb:"true"
                                 
                                 
                                 }
@@ -314,7 +315,7 @@ app.post('/hashes', (req, res)=> {
 
                 }
 
-        }, 1000);
+        }, 50);
       
 
 
@@ -323,73 +324,7 @@ app.post('/hashes', (req, res)=> {
 
         });
 
-app.post('/hashes', (req, res)=> {
 
-        hashEntryExists(req.body.Hash, [req.params.id]);
-        
-        //wait for sql reply sand edit
-        setTimeout(() => {
-            if(!hashExists)
-                {
-        
-                    console.log("Hash doesn't exist in our database... checking external databases");
-        
-                    //API virus total
-                    //7a1937dfdad30b004dae4dd55fd49d28efa658d464dab3df61b5c91b15934eea         
-                    //change default key in v3
-                    const theSameObject = defaultTimedInstance.fileLookup(req.body.Hash, function(err, resp){
-                        if (err) {
-                          console.log('Well, crap.');
-                         res.send(err);
-                          return;
-                        }
-    
-                        resp = flatten(JSON.parse(resp));
-                        
-
-                        var sql = "INSERT INTO `HashId` (`Hash`, `PopularName`, `FileType`, `MD5rep`,`Sha256rep`, `Threat`, `FileSize`, `FistSub`, `LastSub`, `NumTimeSub` ) VALUES('" + req.body.Hash +  "','" + resp.data["data.attributes.meaningful_name"] +  "','" + resp.body.FileType  +   "','" + resp.body.MD5rep  +  "','" + resp.body.Sha256rep  +  "','" + resp.body.Threat  +  "','" + resp.body.FileSize  +  resp.body.FirstSub  +  "','" + resp.body.LastSub  +  "','" + resp.body.NumTimeSub  +  "')";
-                    mySQLconnection.query(sql,  [req.params.id],(err,rows,fields)=>{
-                        if(!err){
-                        
-                            console.log("VIRUS HASH FOUND- ADDED TO DATABASE");   
-                            
-                 
-                        }
-                        else{
-                        
-                            console.log(err);
-                        }
-                 }
-                        )
-    
-                       res.send(resp);
-                        return resp;
-                      });
-                      //res.send({name:"test read this!!!! 01984e93jinc jmd jwc "});   
-        
-                }
-                else
-                {
-                    
-        
-                    console.log("THIS EXISTS IN OUR DATABASE- NOW DISPLAYING METADATA");
-    
-                    const theSameObject = defaultTimedInstance.fileLookup(req.body.Hash, function(err, resp){
-                        if (err) {
-                          console.log('Well, crap.');
-                         res.send(err);
-                          return;
-                        }
-                        
-    
-                       res.send(flatten(JSON.parse(resp)));
-                        return resp;
-                      });  
-                }
-        }, 15000);
-      
-
-        });
 
 
 

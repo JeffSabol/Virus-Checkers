@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Route,Routes } from 'react-router-dom';
 import {useNavigate} from "react-router-dom";
 import './App.css';
 import axios from "axios"
-import Login from "./Login.js";
-import Analysis from "./Analysis";
 // Axios
 const baseUrl = "http://localhost:5000";
 
@@ -20,7 +17,6 @@ const SignUp = () => {
 	const [usernameConf, setUsernameConf] = useState(""); 
 	const [emailConf, setEmailConf] = useState(""); 
 	const [credsList, setCredsList] = useState([0]);
-    const [signup, setSignUp] = useState([0]);
 	const [passConfStatus, setpassConfStatus] = useState(""); 
 	const [accountCreated, setAccountCreated] = useState("");
 
@@ -30,17 +26,19 @@ const SignUp = () => {
 		componentDidMount();
 
 	  }, []); 
-	  
+
 	const handleChangeConf = e => {
       
 		setConf(e.target.value);
 		
 	}
+
 	const handleChangeName = e => {
       
 		setName(e.target.value);
 		
 	}
+
 	const handleChangeEmail = e => {
       
 		setEmail(e.target.value);
@@ -52,19 +50,20 @@ const SignUp = () => {
 		setUsername(e.target.value);
 		
 	}
+
 	const handleChangePassword = e => {
       
 		setPassword(e.target.value);
 		
 	}
-	const componentDidMount = (e) => {
+
+	const componentDidMount = () => {
 		if (window.localStorage.getItem("token")) {
 		  //redirect to Login
 		  console.log("redirect to login");
 		  navigate("/analysis");
 		}
 	  }
-
 
 	const handleSignup =  async (e) => {
 		setEmailConf("");
@@ -144,13 +143,13 @@ const SignUp = () => {
    
     <body>
 	<div class="container">
-		{credsList.map(creds=> {if(accountCreated === "Created"){
+		{credsList.map(creds=> {
+			
+			if(accountCreated === "Created"){
 
 
 return(
 "/analysis")
-
-
 
 		}	
 		})}

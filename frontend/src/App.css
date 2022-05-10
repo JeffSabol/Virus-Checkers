@@ -174,7 +174,22 @@ p.small {
 	font-weight: 400;
 	font-size: 0.7em;
 	letter-spacing: 1px;
-	background-color: #6e63cc;
+	background-color: rgb(21, 167, 43);
+	cursor:pointer;
+	outline: none;
+}
+button2 {
+	position: center;
+	margin-top: 0px;
+	border: 0;
+	border-radius: 2px;
+	color: white;
+	padding: 10px;
+	text-transform: uppercase;
+	font-weight: 400;
+	font-size: 0.7em;
+	letter-spacing: 1px;
+	background-color: rgb(21, 167, 43);
 	cursor:pointer;
 	outline: none;
 }
@@ -341,3 +356,33 @@ input {
  
 	text-decoration: none;
  }
+
+
+
+ .dropdown {
+   position: relative;
+   display: inline-block;
+ }
+ 
+ .dropdown-content {
+   display: none;
+   position: absolute;
+   background-color: #f9f9f9;
+   min-width: 160px;
+   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+   padding: 12px 16px;
+   z-index: 1;
+ }
+ 
+ .dropdown:hover .dropdown-content {
+   display: block;
+ }
+
+ .imgLogo {
+	position: relative;
+	top: 0;
+	left: 0;
+	padding: 0px;
+	width: 50px;
+  }
+ 

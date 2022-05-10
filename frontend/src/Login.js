@@ -1,8 +1,6 @@
 import './App.css';
 import React, { useState } from "react";
 import { Link , useNavigate} from "react-router-dom";
-import { BrowserRouter } from 'react-router-dom';
-import Analysis from "./Analysis.js";
 import axios from "axios"
 import {useEffect} from 'react';
 
@@ -22,7 +20,7 @@ const Login = () => {
 
 	  }, []);
 
-	const componentDidMount = (e) => {
+	const componentDidMount = () => {
 		if (window.localStorage.getItem("token")) {
 		  //redirect to Login
 		  console.log("redirect to login");
@@ -43,7 +41,6 @@ const Login = () => {
 
 	const handleLogin = async (e) => {
 		setLoginConf("");
-    
 		e.preventDefault();
 		console.log("logining in")
 		
@@ -61,9 +58,11 @@ const Login = () => {
 				setCredsList([data.data]);
 
 				if(data.data.login === "success"){
-
+					setUsername("");
+					setPassword("");
 					window.localStorage.setItem("token", data.data.token);
 					navigate("/analysis");
+
 
 				}
 			
@@ -75,8 +74,7 @@ const Login = () => {
 			}
 				/** Update dataset list entries**/
 				/** Reset entries**/
-				setUsername("");
-				setPassword("");
+
 	
 				
 			} catch (err) {
@@ -125,7 +123,7 @@ const Login = () => {
 			<br/>
 			<input  onChange = {handleChangePassword} type="password" id="password" />
 			<br/>
-			<form  onSubmit={handleLogin} ><button type="submit">Sign In</button></form>
+			<form  onSubmit={handleLogin} ><button  type="submit">Sign In</button></form>
 			
 
 			<br/>

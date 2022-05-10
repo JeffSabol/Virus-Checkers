@@ -1,10 +1,8 @@
 import './App.css';
-import SignUp from "./SignUp.js";
-import Login from "./Login.js";
 import axios from "axios"
 
 import {useEffect,useState} from 'react';
-import { Link , useNavigate} from "react-router-dom";
+import {  useNavigate} from "react-router-dom";
 
 const baseUrl = "http://localhost:5000";
 const Analysis = () =>
@@ -26,6 +24,8 @@ const Analysis = () =>
   useEffect(() => {
     componentDidMount();
     getUserData();
+
+    
   },[]);
 
   const getUserData = async()=>{
@@ -49,7 +49,7 @@ const Analysis = () =>
 
   }
   
-  const componentDidMount = (e) => {
+  const componentDidMount = () => {
     if (!window.localStorage.getItem("token")) {
       //redirect to Login
       console.log("redirect to login");
@@ -94,7 +94,35 @@ const Analysis = () =>
 
 
 <nav id="topnav">
-         <a id="logo" class="nav-link" >VirusCheckers</a>
+
+ 
+         <a id="logo" class="nav-link" >
+           
+         <img  class = "imgLogo"  src="https://i.imgur.com/IyLfb58.png"></img>
+         </a>
+
+
+
+         <div  class="dropdown" >
+   <span> <a id="logo" class="nav-link" >
+           
+           <img  class = "imgLogo"  src="https://flyclipart.com/thumb2/avatar-my-profile-profile-user-user-profile-icon-196366.png"></img>
+           </a></span>
+
+
+
+
+
+   <div class="dropdown-content">
+   <p>{loggedUser.Username}</p>
+<p>{loggedUser.FullName}</p>
+<p> {loggedUser.Email}</p>
+
+ 
+   </div>
+ </div>
+ 
+
          <a class="nav-link" >About</a>
          <button1 id = "logoutBtn" 
   onClick={e => {
@@ -106,13 +134,14 @@ const Analysis = () =>
 >
   Logout
 </button1>  
+
+
+ 
+
+
       </nav>
-
-      <tr>Username: {loggedUser.Username}</tr>
-
-<tr>Name: {loggedUser.FullName}</tr>
-
-<tr> Email: {loggedUser.Email}</tr>
+      
+    
 
 
 { curdsList.map(curd=> {
@@ -158,25 +187,31 @@ else
   
   console.log({curd});
 
-  // run for 2 sec
-  while(isLoading )
-  {
-    console.log("doing this");
-    
-    {setTimeout(() => {
-      console.log("delayed doing this");
-      setIsLoading(0);
-    }, 2500)
+  // run for 2.5 sec
+
+  if(!(curd.inLocalDb)){
+    while(isLoading )
+    {
+      console.log("doing this");
+      
+      {
+        setTimeout(() => {
+        console.log("delayed doing this");
+        setIsLoading(0);
+      }, 2500)
+    }
+      return(
+  
+        <div className="spinner-container">
+      
+        <div className="loading-spinner"></div>
+      </div>
+  
+      )
+   }
+
   }
-    return(
-
-      <div className="spinner-container">
-    
-      <div className="loading-spinner"></div>
-    </div>
-
-    )
- }
+ 
   try {
     if(curd.error.message ===  "Resource not found.")
   {
@@ -189,7 +224,7 @@ else
        This doesn't appear to be a virus.
       </h1>
       
-      <button
+      <button2
   onClick={e => {
     navigate("/analysis");
 
@@ -200,7 +235,7 @@ else
   }}
 >
   Check another Hash
-</button>  
+</button2>  
       </section>
       
 
@@ -211,8 +246,32 @@ else
     
   } 
   catch (error) {
+
+    if(!(curd.inLocalDb)){
+      while(isLoading )
+      {
+        console.log("doing this");
+        
+        {
+          setTimeout(() => {
+          console.log("delayed doing this");
+          setIsLoading(0);
+        }, 2500)
+      }
+        return(
+    
+          <div className="spinner-container">
+        
+          <div className="loading-spinner"></div>
+        </div>
+    
+        )
+     }
+  
+    }
       return(   
   
+        
         
         <section> 
   
@@ -228,18 +287,15 @@ else
           <tr>Last Submission Date: {new Date(curd["data.attributes.last_submission_date"]*1000).toLocaleString()}</tr>
           
 
-          <button
-  onClick={e => {
-    
+          <button2 onClick={e => {
     navigate("/analysis");
-
     setIsLoading(1);
     setVirusReply(0);
    
   }}
 >
   Check another Hash
-</button>  
+</button2>  
 
             </section>
            
