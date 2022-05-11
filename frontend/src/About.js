@@ -68,7 +68,7 @@ const About = () => {
         <div class="dropdown" >
           <span> <a id="logo" class="nav-link" >
 
-            <img class="imgLogo" src="https://flyclipart.com/thumb2/avatar-my-profile-profile-user-user-profile-icon-196366.png"></img>
+            <img class="imgLogo" src="https://i.imgur.com/B4U7Uij.png"></img>
           </a></span>
 
 
@@ -103,7 +103,8 @@ const About = () => {
 
       </nav>
     <h1>About</h1>
-    <p>Virus Checkers is a website to check virus file hashes. Simply create an account, enter a MD5 or SHA256 hash inside the search bar and hit check hash. We will check our database and VirusTotal's database.</p>
+    <p id="about_text">Virus Checkers is a website to check virus file hashes. Simply create an account, enter a MD5 or SHA256 hash inside the search bar and hit check hash. We will check our database and VirusTotal's database.</p>
+
 </>
    
   );
