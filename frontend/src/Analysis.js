@@ -21,7 +21,7 @@ const Analysis = () => {
   }
 
   useEffect(() => {
-    //    componentDidMount();
+    componentDidMount();
     getUserData();
 
 
