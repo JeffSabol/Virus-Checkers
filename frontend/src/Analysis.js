@@ -69,12 +69,12 @@ const Analysis = () => {
     setIsLoading(1);
     setIsValidHash("");
     setIsEmpty("");
-    
+
     console.log("called here")
 
     /*Normal Update */
 
-    if((regexExpSHA256.test(Hash) || regexExpMD5.test(Hash)) && !(Hash === "")){
+    if((regexExpSHA256.test(Hash.trim()) || regexExpMD5.test(Hash.trim())) && !(Hash.trim() === "")){
       setVirusReply(1);
       try {
         const data = await axios.post(`${baseUrl}/hashes`, {
