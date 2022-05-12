@@ -75,7 +75,7 @@ const Analysis = () => {
     /*Normal Update */
 
     if((regexExpSHA256.test(Hash.trim()) || regexExpMD5.test(Hash.trim())) && !(Hash.trim() === "")){
-      setVirusReply(1);
+     
       try {
         const data = await axios.post(`${baseUrl}/hashes`, {
           Hash: Hash
@@ -87,6 +87,7 @@ const Analysis = () => {
         /** Update dataset list entries**/
         /** Reset entries**/
         setHash("");
+        setVirusReply(1);
 
       } catch (err) {
         console.log(err.message);
@@ -234,7 +235,7 @@ const Analysis = () => {
           }
 
           try {
-            if (curd.error.message === "Resource not found.") {
+            if ((curd.error.message === "Resource not found.") || (curd.error.code === "NotFoundError")) {
               return (
                 <section>
 
