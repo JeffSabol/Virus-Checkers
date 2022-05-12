@@ -5,9 +5,15 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 const baseUrl = "http://localhost:5000";
+
 const Analysis = () => {
 
+  const regexExpSHA256 = /^[a-f0-9]{64}$/gi;
+  const regexExpMD5 = /^[a-f0-9]{32}$/gi;
+
   const [Hash, setHash] = useState("");
+  const [isEmpty, setIsEmpty] = useState("");
+  const [isValidHash, setIsValidHash] = useState("");
   const [virusReply, setVirusReply] = useState(0);
   const [curdsList, setcurdsList] = useState([0]);
   const [loggedUser, setLoggedUser] = useState([0]);
@@ -61,29 +67,45 @@ const Analysis = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(1);
-    setVirusReply(1);
-
+    setIsValidHash("");
+    setIsEmpty("");
+    
     console.log("called here")
 
     /*Normal Update */
 
-    try {
-      const data = await axios.post(`${baseUrl}/hashes`, {
-        Hash: Hash
+    if((regexExpSHA256.test(Hash) || regexExpMD5.test(Hash)) && !(Hash === "")){
+      setVirusReply(1);
+      try {
+        const data = await axios.post(`${baseUrl}/hashes`, {
+          Hash: Hash
 
-      });
+        });
 
-      setcurdsList([data.data]);
-      /** Update dataset list entries**/
-      /** Reset entries**/
-      setHash("");
+        
+        setcurdsList([data.data]);
+        /** Update dataset list entries**/
+        /** Reset entries**/
+        setHash("");
 
-    } catch (err) {
-      console.log(err.message);
+      } catch (err) {
+        console.log(err.message);
+      }
+
     }
+    else{
+      console.log("Not a 256 hash");
 
+
+
+      if(!(Hash === "")){
+
+        setIsValidHash("not a valid hash (must be SHA256 or MD5)");
+      }
+      else
+        setIsEmpty("You have to enter something, man.");
+    }
   }
-
 
 
   return (
@@ -105,7 +127,7 @@ const Analysis = () => {
         <div class="dropdown" >
           <span> <a id="logo" class="nav-link" >
 
-            <img class="imgLogo" src="https://flyclipart.com/thumb2/avatar-my-profile-profile-user-user-profile-icon-196366.png"></img>
+            <img class="imgLogo" src="https://i.imgur.com/B4U7Uij.png"></img>
           </a></span>
 
 
@@ -140,7 +162,9 @@ const Analysis = () => {
 
       </nav>
 
-
+      <p class="inputVal">{isValidHash}</p>
+            <p class="inputVal">{isEmpty}</p>
+          
 
 
       {curdsList.map(curd => {
