@@ -106,7 +106,7 @@ const Analysis = () =>
          <div  class="dropdown" >
    <span> <a id="logo" class="nav-link" >
            
-           <img  class = "imgLogo"  src="https://flyclipart.com/thumb2/avatar-my-profile-profile-user-user-profile-icon-196366.png"></img>
+           <img  class = "imgUserLogo"  src="https://i.imgur.com/IyLfb58.png"></img>
            </a></span>
 
 
