@@ -1,5 +1,9 @@
 #about_text {
 	color:rgb(76, 222, 74);
+	font-size: 24px
+}
+#user_text {
+	color:rgb(74, 96, 222);
 }
 #VirusLogo {
 	width: 15%;
@@ -353,7 +357,6 @@ input {
 	height: 55px;
  
 	color: White;
- 
 	text-align: center;
 	line-height: 55px;
  

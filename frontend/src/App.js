@@ -16,13 +16,8 @@ function App() {
        <Route path='/signup' element={<SignUp />} />
        <Route path='/analysis' element={<Analysis />} />
        <Route path='/about' element={<About />} />
-
     </Routes>
-  
-      
-    
 
-  
   );
 }
 
