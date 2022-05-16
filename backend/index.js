@@ -7,6 +7,7 @@ const nvt = require('node-virustotal');
 const defaultTimedInstance = nvt.makeAPI();
 const flatten = require('flat').flatten;
 
+
 let hashExists;
 
 let app= express();
