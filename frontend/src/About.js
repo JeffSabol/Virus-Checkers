@@ -58,9 +58,9 @@ const About = () => {
 <nav id="topnav">
 
 
-        <a id="logo" class="nav-link" >
+        <a id="logo" class="nav-link"  href = "./Analysis" >
 
-          <img class="imgLogo" src="https://i.imgur.com/IyLfb58.png"></img>
+          <img class="imgLogo" src="https://i.imgur.com/IyLfb58.png" ></img>
         </a>
 
 
