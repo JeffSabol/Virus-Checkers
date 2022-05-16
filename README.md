@@ -10,6 +10,7 @@ Virus Checker includes a user login account system.  Users are able to create si
 
 ## Required Software
 ### To run this project you will need a [MySQL database](https://www.mysql.com/downloads/), and [Node.js](https://nodejs.org/en/download/) installed
+### To handle API calls to Virus Total if the default key does not work you may have to create your own [Virus Total Account](https://www.virustotal.com/) and get a public API key.
 
 ## Initializing the Database
 To initialize the database the file `DatabaseInit.sql` contains the required sql code for initialization it is recomended when creating the database to use the the default port and password if any of these are different the sql connection variables in `backend\index.js` must be adjusted too. The default database password is `password` and the default port is `3306`
@@ -25,6 +26,7 @@ Once this finishes move to the `backend` directory and once again run the comman
 
 `npm install`
 
+If the default API key does not work you will now have to insert your own. In the file `backend\node_modules\node-virustotal\v3.js` set the variable `defaultKey` to the public API key obtained from Virus Total.
 
 ## Starting the Front End and Back End
 Once the database is running and the packages are installed running the website requires two command terminals one for the front end and one for the back end
