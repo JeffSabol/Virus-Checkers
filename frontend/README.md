@@ -1,3 +1,23 @@
+# Front End
+
+This folder contains the code required to run the front end
+
+This uses [React](https://reactjs.org/) to run 
+
+### In the `src` folder are the JavaScript files that run the front end and communicate with the back end
+`App.js` contains the routing for the different paths
+
+`Login.js` contains the frontend for the `/` path allowing a user to either login or choose to create an account
+
+`SignUp.js` contains the frontend for the `/signup` path that provides a way for a user to create their account
+
+`Analysis.js` contains the frontend for the `/` path that contains the interface to search for a hash and display that
+
+`About.js` contains the frontend for the `/about` path that has infromation about the project
+
+
+Bellow are Scripts to run and debug the front end
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
