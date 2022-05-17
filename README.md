@@ -17,6 +17,12 @@ To initialize the database the file `DatabaseInit.sql` contains the required sql
 
 It is recommended to use [MySQL Workbench](https://www.mysql.com/products/workbench/) to initialize the database. After creating a database, connect to it with MySQL workbench and click File->Open SQL Script to open DatabaseInit.sql. You can now run the script and it will setup the database schemea, this only needs to be done once.
 
+Now to have the database accessible during runtime in MySQL Workbench execute the query:
+
+`ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';`
+
+if you choose to have a different password make sure to change `password`
+
 ## Installing Node.JS Packages
 Once Node.JS is installed using a command line terminal move to the `frontend` directory and run the command 
 
