@@ -57,6 +57,7 @@ const SignUp = () => {
 		}
 	}
 
+	//signup
 	const handleSignup = async (e) => {
 		setEmailConf("");
 		setUsernameConf("");
