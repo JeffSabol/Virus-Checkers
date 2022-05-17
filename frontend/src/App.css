@@ -1,3 +1,10 @@
+#about_text {
+	color:rgb(76, 222, 74);
+	font-size: 24px
+}
+#user_text {
+	color:rgb(74, 96, 222);
+}
 #VirusLogo {
 	width: 15%;
 	height: 15%;
@@ -164,7 +171,7 @@ p.small {
 	color: #665851;
 }
 
-.login-box button {
+.login-box button, button1 {
 	margin-top: 0px;
 	border: 0;
 	border-radius: 2px;
@@ -174,7 +181,22 @@ p.small {
 	font-weight: 400;
 	font-size: 0.7em;
 	letter-spacing: 1px;
-	background-color: #6e63cc;
+	background-color: rgb(21, 167, 43);
+	cursor:pointer;
+	outline: none;
+}
+button2 {
+	position: center;
+	margin-top: 0px;
+	border: 0;
+	border-radius: 2px;
+	color: white;
+	padding: 10px;
+	text-transform: uppercase;
+	font-weight: 400;
+	font-size: 0.7em;
+	letter-spacing: 1px;
+	background-color: rgb(21, 167, 43);
 	cursor:pointer;
 	outline: none;
 }
@@ -221,8 +243,14 @@ p.small {
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: rgb(126, 77, 77);
+  color: rgb(76, 222, 74);
   font-family: "Lucida Console", "Courier New", monospace;
+
+}
+
+.inputVal{
+
+	color: rgb(234, 25, 25);
 
 }
 
@@ -305,3 +333,62 @@ input {
 	height: 80px;
   color: aliceblue;
 }
+#topnav {
+	width: 100%;
+ 
+	position: fixed;
+	top: 0;
+	left: 0;
+ 
+	background-color: #4156a3;
+ 
+	font-family: Arial, sans-serif;
+	font-size: 15px;
+ }
+ #logoutBtn {
+	position:fixed;
+   right:10px;
+   top:10px;
+ }
+ 
+ .nav-link {
+	display: inline-block;
+	width: 100px;
+	height: 55px;
+ 
+	color: White;
+	text-align: center;
+	line-height: 55px;
+ 
+	text-decoration: none;
+ }
+
+
+
+ .dropdown {
+   position: relative;
+   display: inline-block;
+ }
+ 
+ .dropdown-content {
+   display: none;
+   position: absolute;
+   background-color: #f9f9f9;
+   min-width: 160px;
+   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+   padding: 12px 16px;
+   z-index: 1;
+ }
+ 
+ .dropdown:hover .dropdown-content {
+   display: block;
+ }
+
+ .imgLogo {
+	position: relative;
+	top: 0;
+	left: 0;
+	padding: 0px;
+	width: 50px;
+  }
+ 
