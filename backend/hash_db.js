@@ -1,4 +1,7 @@
+//This is used to load our sql db with hashes
+
 const request = require("request");
+
 
 var mySQLconnection = mysql.createConnection({
   host: "localhost",
@@ -6,9 +9,8 @@ var mySQLconnection = mysql.createConnection({
   password: "password",
   database: "sql447",
   multipleStatements: true,
-
-  /**use ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';**/
 });
+
 
 mySQLconnection.connect((err) => {
   if (!err) {
@@ -18,6 +20,7 @@ mySQLconnection.connect((err) => {
   }
 });
 
+//load db with virus share data if needed 
 for (let index = 0; index < 1; index++) {
   let str = `${index}`;
 

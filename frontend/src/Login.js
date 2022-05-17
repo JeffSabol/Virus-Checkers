@@ -14,13 +14,15 @@ const Login = () => {
   const [loginConf, setLoginConf] = useState("");
 
   useEffect(() => {
+	//check if a user is already logged in
     componentDidMount();
   }, []);
 
   const componentDidMount = () => {
+	//check local db for a token
     if (window.localStorage.getItem("token")) {
       //redirect to Login
-      console.log("redirect to login");
+      console.log("redirect to home");
       navigate("/analysis");
     }
   };
@@ -33,12 +35,12 @@ const Login = () => {
   };
 
   const handleLogin = async (e) => {
+	//reset error display
     setLoginConf("");
     e.preventDefault();
     console.log("logining in");
 
-    /*Normal Update */
-
+    //verify login attempt
     try {
       const data = await axios.post(`${baseUrl}/login`, {
         Username: Username,
@@ -50,6 +52,7 @@ const Login = () => {
       setCredsList([data.data]);
 
       if (data.data.login === "success") {
+		//reset entries
         setUsername("");
         setPassword("");
         window.localStorage.setItem("token", data.data.token);
@@ -59,8 +62,7 @@ const Login = () => {
       if (data.data.login === "failure") {
         setLoginConf("Invalid Login");
       }
-      /** Update dataset list entries**/
-      /** Reset entries**/
+
     } catch (err) {
       console.log(err.message);
     }

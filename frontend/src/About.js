@@ -12,11 +12,15 @@ const About = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    //    componentDidMount();
+  //check if a user is logged in
+  componentDidMount();
+  //get user credential
     getUserData();
   }, []);
 
   const getUserData = async () => {
+
+    //check local storage for token
     let token = window.localStorage.getItem("token");
     try {
       const data = await axios.post(`${baseUrl}/users`, {

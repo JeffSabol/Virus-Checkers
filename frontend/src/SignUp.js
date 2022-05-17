@@ -26,6 +26,7 @@ const SignUp = () => {
 	const regexEmail = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/gi;
 
 	useEffect(() => {
+		 //check if a user is logged in
 		componentDidMount();
 	}, []);
 
@@ -50,6 +51,7 @@ const SignUp = () => {
 	}
 
 	const componentDidMount = () => {
+		//check local db for a token
 		if (window.localStorage.getItem("token")) {
 			//redirect to Login
 			console.log("redirect to login");
@@ -59,8 +61,10 @@ const SignUp = () => {
 
 	//signup
 	const handleSignup = async (e) => {
+		//reset error display
 		setEmailConf("");
 		setUsernameConf("");
+
 		e.preventDefault();
 		console.log("Signing up")
 

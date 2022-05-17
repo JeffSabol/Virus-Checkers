@@ -16,8 +16,8 @@ const Analysis = () => {
   const [virusReply, setVirusReply] = useState(0);
   const [curdsList, setcurdsList] = useState([0]);
   const [loggedUser, setLoggedUser] = useState([0]);
-  const [isLoading, setIsLoading] = useState(1);
-  const [prevHash, setPrevHash] = useState("");
+  const [isLoading, setIsLoading] = useState(1); // loading conditional
+  const [prevHash, setPrevHash] = useState(""); //searched Hash
   const navigate = useNavigate();
 
   const handleChangeHash = (e) => {
@@ -26,11 +26,15 @@ const Analysis = () => {
   };
 
   useEffect(() => {
+    //check if a user is logged in
     componentDidMount();
+    //get user credentials
     getUserData();
   }, []);
 
   const getUserData = async () => {
+
+    //check local storage for token
     let token = window.localStorage.getItem("token");
     try {
       const data = await axios.post(`${baseUrl}/users`, {
@@ -64,13 +68,15 @@ const Analysis = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(1);
+
+    //reset error display
     setIsValidHash("");
     setIsEmpty("");
 
     console.log("called here");
 
-    /*Normal Update */
-
+    //check if hash is valid type
+    //MDS or Sha256
     if (
       (regexExpSHA256.test(Hash.trim()) || regexExpMD5.test(Hash.trim())) &&
       !(Hash.trim() === "")
@@ -81,8 +87,8 @@ const Analysis = () => {
         });
 
         setcurdsList([data.data]);
-        /** Update dataset list entries**/
-        /** Reset entries**/
+        
+        /** Reset Hash**/
         setPrevHash(Hash);
         setHash("");
         setVirusReply(1);
