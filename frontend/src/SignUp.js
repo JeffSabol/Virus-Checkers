@@ -89,6 +89,11 @@ const SignUp = () => {
 		if (Password !== Conf) { setpassConfStatus("Passwords Don't Match: Confirm Password\n"); return; }
 		else { setpassConfStatus(""); }
 
+		
+		if((nameStatus !== "")||(emailStatus !== "")||(usernameStatus !== "")||(passStatus)||(passConfStatus !== "")||(usernameConf !== ""))
+		{return;}
+
+
 		try {
 			const data = await axios.post(`${baseUrl}/signup`, {
 				FullName: Name,
