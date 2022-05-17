@@ -299,28 +299,3 @@ const Analysis = () => {
 };
 
 export default Analysis;
-
-/**
- cd frontend
- npm install
- npm start
-
-
-
-
- cd backend
- npminstall
- cd node_modules/node-virustotal/ 
- emacs v3.js
- *edit the default API key and  change default delay*
- cd ....
- node index.js
-
-
-
-
-
-
-
-
- */
