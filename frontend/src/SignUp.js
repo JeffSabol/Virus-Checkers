@@ -68,10 +68,10 @@ const SignUp = () => {
 		e.preventDefault();
 		console.log("Signing up")
 
-		if (Name.trim === "") { setNameStatus(" Name can't be empty"); return; }
+		if (Name === "") { setNameStatus(" Name can't be empty"); return; }
 		else { setNameStatus(""); }
 
-		if (Email.trim === "") { setEmailStatus("Email can't be empty"); return; }
+		if (Email === "") { setEmailStatus("Email can't be empty"); return; }
 		else {
 			if (!regexEmail.test(Email)) {
 
@@ -81,18 +81,15 @@ const SignUp = () => {
 			setEmailStatus("");
 		}
 
-		if (Username.trim === "") { setUsernameStatus("Username can't be empty"); return; }
+		if (Username === "") { setUsernameStatus("Username can't be empty"); return; }
 		else { setUsernameStatus(""); }
 
-		if (Password.trim === "") { setPassStatus("Password can't be empty"); return; }
+		if (Password === "") { setPassStatus("Password can't be empty"); return; }
 		else { setPassStatus(""); }
 		if (Password !== Conf) { setpassConfStatus("Passwords Don't Match: Confirm Password\n"); return; }
 		else { setpassConfStatus(""); }
 
-		// input validation
-		if((nameStatus !== "") || (emailStatus !== "") || (usernameStatus !== "") || (passStatus !== "") || (passConfStatus !== "") || (usernameConf !== "")){
-			return;
-		}
+	
 
 
 		try {
