@@ -59,7 +59,7 @@ function hashEntryExists(checkHash, paramsId) {
     }
   });
 }
-
+//check if MD5 hash exists in our db
 function hashEntryExistsMD5(checkHash, paramsId) {
   var sql =
     "SELECT * FROM HashId WHERE EXISTS (SELECT MD5rep FROM HashId WHERE MD5rep = '" +
@@ -75,6 +75,7 @@ function hashEntryExistsMD5(checkHash, paramsId) {
   });
 }
 
+//check if SHA256 hash exists in our db
 function hashEntryExistsSha256(checkHash, paramsId) {
   var sql =
     "SELECT * FROM HashId WHERE EXISTS (SELECT Sha256rep FROM HashId WHERE Sha256rep = '" +
@@ -90,6 +91,7 @@ function hashEntryExistsSha256(checkHash, paramsId) {
   });
 }
 
+//check if we have hash details
 function hashDetailExists(checkHash, paramsId) {
   var sql = "(SELECT FileType FROM HashId WHERE Hash = '" + checkHash + "' );";
 
@@ -104,6 +106,7 @@ function hashDetailExists(checkHash, paramsId) {
   });
 }
 
+//Check if username exists in database
 function usernameEntryExists(checkUsername, paramsId) {
   var sql =
     "SELECT * FROM userCredTable WHERE EXISTS (SELECT Username FROM userCredTable WHERE Username = '" +
@@ -119,6 +122,7 @@ function usernameEntryExists(checkUsername, paramsId) {
   });
 }
 
+//Check if email exists in database
 function emailEntryExists(checkEmail, paramsId) {
   var sql =
     "SELECT * FROM userCredTable WHERE EXISTS (SELECT Email FROM userCredTable WHERE Email = '" +
@@ -134,6 +138,7 @@ function emailEntryExists(checkEmail, paramsId) {
   });
 }
 
+//return hash table in JSON
 app.get("/hashes", (req, res) => {
   mySQLconnection.query("SELECT * FROM HashId", (err, rows, fields) => {
     if (!err) {
@@ -144,6 +149,7 @@ app.get("/hashes", (req, res) => {
   });
 });
 
+//find hash table using Id
 app.get("/hashes/:id", (req, res) => {
   mySQLconnection.query(
     "SELECT * FROM HashId WHERE Id = ?",
@@ -158,6 +164,8 @@ app.get("/hashes/:id", (req, res) => {
   );
 });
 
+//return user info using token decryption
+//using Local database
 app.post("/users", (req, res) => {
   let token = atob(req.body.token);
   var sql =
@@ -177,7 +185,10 @@ app.post("/users", (req, res) => {
   });
 });
 
+//Search Hash 
 app.post("/hashes", (req, res) => {
+
+    //check if hash exist in DB
   hashEntryExists(req.body.Hash, [req.params.id]);
 
   if (req.body.Hash.length === sha256Length) {
@@ -185,6 +196,8 @@ app.post("/hashes", (req, res) => {
   } else {
     hashEntryExistsMD5(req.body.Hash, [req.params.id]);
   }
+
+  //check if hash details exist in DB
   hashDetailExists(req.body.Hash, [req.params.id]);
 
   //wait for sql reply and edit
@@ -192,7 +205,7 @@ app.post("/hashes", (req, res) => {
     if (!(hashExists && hashDetailsExist)) {
       //API virus total
       //7a1937dfdad30b004dae4dd55fd49d28efa658d464dab3df61b5c91b15934eea
-      //change default key in v3
+      //change default key in node-virustotal/v3.js
       const theSameObject = defaultTimedInstance.fileLookup(
         req.body.Hash,
         function (err, resp) {
@@ -204,7 +217,8 @@ app.post("/hashes", (req, res) => {
           resp = flatten(JSON.parse(resp));
 
           if (entryExists) {
-            console.log("updating hash details ");
+            
+            // update Hash Entry
             var updateQuery =
               "UPDATE HashId  SET  PopularName = '" +
               resp["data.attributes.meaningful_name"] +
@@ -249,6 +263,8 @@ app.post("/hashes", (req, res) => {
               "Hash doesn't exist in our database... checking external databases"
             );
 
+            //check hash using virustotal
+            //if malicious add to db
             var sql =
               "INSERT INTO `HashId` (`Hash`, `PopularName`, `FileType`, `MD5rep`,`Sha256rep`, `Threat`, `FileSize`, `FirstSub`, `LastSub`, `NumTimeSub` , `NumEnginesDetected` , `NumEnginesUndetected` ) VALUES('" +
               req.body.Hash +
@@ -290,9 +306,13 @@ app.post("/hashes", (req, res) => {
           return resp;
         }
       );
-    } else {
-      console.log("THIS EXISTS IN OUR DATABASE- NOW DISPLAYING DATA");
+    } 
+    //if hash with details found in db
+    else {
 
+
+      console.log("THIS EXISTS IN OUR DATABASE- NOW DISPLAYING DATA");
+        //send Hash data from our database
       var sql =
         "(SELECT * FROM HashId WHERE  Hash = '" +
         req.body.Hash +
@@ -328,14 +348,17 @@ app.post("/hashes", (req, res) => {
   }, 50);
 });
 
+//user login
 app.post("/login", (req, res) => {
   console.log(req.body.Username + " tried to login");
 
+  // check if username and password hash are in db
   var sql =
     "(SELECT Username,PasswordHash FROM userCredTable WHERE Username = '" +
     req.body.Username +
     "');";
-  //SELECT * FROM userCredTable WHERE EXISTS
+  
+    //encrypty submitted password
   let hashPass = crypto
     .createHash("sha256")
     .update(req.body.PasswordHash)
@@ -343,10 +366,14 @@ app.post("/login", (req, res) => {
   userCredDatabase.query(sql, [req.params.id], (err, rows, fields) => {
     console.log("hello");
     console.log(rows);
+
+    // if username not in db
     if (!rows[0]) {
       console.log("0");
       res.send({ login: "failure" });
-    } else {
+    }
+    //compare encrypted passwords
+    else {
       if (
         rows[0].Username === req.body.Username &&
         rows[0].PasswordHash === hashPass
@@ -361,12 +388,14 @@ app.post("/login", (req, res) => {
   });
 });
 
+// user sign up
 app.post("/signup", (req, res) => {
   console.log(req.body.FullName + " tried to SignUp");
 
   usernameEntryExists(req.body.Username, [req.params.id]);
   emailEntryExists(req.body.Email, [req.params.id]);
 
+  // wait for sql retrieval 
   setTimeout(() => {
     console.log("Emailexists: " + emailExists);
     console.log("Unameexists: " + usernameExists);
@@ -384,8 +413,7 @@ app.post("/signup", (req, res) => {
       .update(req.body.PasswordHash)
       .digest("base64");
 
-    //console.log("pass hash:", hashPass);
-
+    //add to database
     var sql =
       "INSERT INTO `userCredTable` (`FullName`, `Email`,`Username`,`PasswordHash`) VALUES ('" +
       req.body.FullName +
@@ -408,25 +436,3 @@ app.post("/signup", (req, res) => {
   }, 1000);
 });
 
-/**
-             * 
-             * 
-CREATE SCHEMA sql447;
-CREATE TABLE sql447.HashId(
-Id INT  Primary key AUTO_INCREMENT,
-Hash Varchar(255),
-PopularName Varchar(255),
-FileType varchar(255),
-MD5rep   varchar(255),
-Sha256rep   varchar(255),
-Threat Varchar(255),
-FileSize INT,
-FirstSub INT,
-LastSub INT,
-NumTimeSub   INT,
-NumEnginesDetected INT,
-NumEnginesUndetected INT
-
-
-);
-             */
