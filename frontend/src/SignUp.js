@@ -67,7 +67,8 @@ const SignUp = () => {
 
 		e.preventDefault();
 		console.log("Signing up")
-
+		
+		//input validation
 		if (Name === "") { setNameStatus(" Name can't be empty"); return; }
 		else { setNameStatus(""); }
 
